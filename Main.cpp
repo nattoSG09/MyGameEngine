@@ -6,6 +6,9 @@
 const char* WIN_CLASS_NAME = "SampleGame";  //ウィンドウクラス名
 const char* WIN_TITLE_NAME = "さんぷるげ～む";  //ウィンドウクラス名
 
+const int WINDOW_WIDTH = 1280;  //ウィンドウの幅
+const int WINDOW_HEIGHT = 720; //ウィンドウの高さ
+
 //プロトタイプ宣言
 LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
@@ -52,11 +55,8 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 	//ウィンドウを表示
 	ShowWindow(hWnd, nCmdShow);
 
-	int winW = WINDOW_WIDTH;
-	int winH = WINDOW_HEIGHT;
-
 	//Direct3D初期化
-	Direct3D::Initialize(winW, winH, hWnd);
+	Direct3D::Initialize(WINDOW_WIDTH, WINDOW_HEIGHT, hWnd);
 
 	//メッセージループ（何か起きるのを待つ）
 	MSG msg;

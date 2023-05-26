@@ -4,15 +4,15 @@
 
 //リンカ
 #pragma comment(lib, "d3d11.lib")
-
-//定数宣言
-const int WINDOW_WIDTH = 1280;  //ウィンドウの幅
-const int WINDOW_HEIGHT = 720; //ウィンドウの高さ
+#pragma comment(lib, "d3dcompiler.lib")
 
 namespace Direct3D
 {
 	//初期化
 	void Initialize(int winW, int winH, HWND hWnd);
+
+	//シェーダー準備
+	void InitShader();
 
 	//描画開始
 	void BeginDraw();
@@ -22,4 +22,5 @@ namespace Direct3D
 
 	//解放
 	void Release();
+
 };
