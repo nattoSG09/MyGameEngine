@@ -130,6 +130,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="Direct3D.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Direct3D.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
