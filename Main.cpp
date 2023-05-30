@@ -1,6 +1,7 @@
 //インクルード
 #include <Windows.h>
 #include "Direct3D.h"
+#include "Quad.h"
 
 //定数宣言
 const char* WIN_CLASS_NAME = "SampleGame";  //ウィンドウクラス名
@@ -36,6 +37,8 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 	//ウィンドウサイズの計算
 	RECT winRect = { 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT };
 	AdjustWindowRect(&winRect, WS_OVERLAPPEDWINDOW, FALSE);
+	int winW = winRect.right - winRect.left;     //ウィンドウ幅
+	int winH = winRect.bottom - winRect.top;     //ウィンドウ高さ
 
 	//ウィンドウを作成
 	HWND hWnd = CreateWindow(
@@ -44,8 +47,8 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 		WS_OVERLAPPEDWINDOW, //スタイル（普通のウィンドウ）
 		CW_USEDEFAULT,       //表示位置左（おまかせ）
 		CW_USEDEFAULT,       //表示位置上（おまかせ）
-		WINDOW_WIDTH,                 //ウィンドウ幅
-		WINDOW_HEIGHT,                 //ウィンドウ高さ
+		winW,                 //ウィンドウ幅
+		winH,                 //ウィンドウ高さ
 		NULL,                //親ウインドウ（なし）
 		NULL,                //メニュー（なし）
 		hInstance,           //インスタンス
@@ -57,6 +60,10 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 
 	//Direct3D初期化
 	Direct3D::Initialize(WINDOW_WIDTH, WINDOW_HEIGHT, hWnd);
+
+	//Quadを召喚
+	Quad* q = new Quad;
+	q->Initialize();
 
 	//メッセージループ（何か起きるのを待つ）
 	MSG msg;
@@ -75,14 +82,17 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 		{
 			//ゲームの処理
 			Direct3D::BeginDraw();
+			q->Draw();
 
 			//描画処理
 			Direct3D::EndDraw();
+
 		}
 	}
 
 	//解放処理
 	Direct3D::Release();
+	q->Release();
 	return 0;
 }
 
