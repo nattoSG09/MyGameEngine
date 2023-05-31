@@ -4,10 +4,10 @@
 //変数
 namespace Direct3D
 {
-	ID3D11Device* pDevice;						//デバイス
-	ID3D11DeviceContext* pContext;				//デバイスコンテキスト
-	IDXGISwapChain* pSwapChain;					//スワップチェイン
-	ID3D11RenderTargetView* pRenderTargetView;	//レンダーターゲットビュー
+	ID3D11Device* pDevice = nullptr;						//デバイス
+	ID3D11DeviceContext* pContext = nullptr;				//デバイスコンテキスト
+	IDXGISwapChain* pSwapChain = nullptr;					//スワップチェイン
+	ID3D11RenderTargetView* pRenderTargetView = nullptr;	//レンダーターゲットビュー
 
 	ID3D11VertexShader* pVertexShader = nullptr;//頂点シェーダー
 	ID3D11PixelShader* pPixelShader = nullptr;	//ピクセルシェーダー
