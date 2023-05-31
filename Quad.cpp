@@ -13,6 +13,7 @@ Quad::Quad():
 
 Quad::~Quad()
 {
+	Release();
 }
 
 void Quad::Initialize()
