@@ -7,7 +7,7 @@ struct CONSTANT_BUFFER
 };
 
 Quad::Quad():
-	pVertexBuffer_(nullptr)
+	pVertexBuffer_(nullptr), pIndexBuffer_(nullptr), pConstantBuffer_(nullptr)
 {
 }
 
@@ -105,7 +105,7 @@ void Quad::Draw()
 
 void Quad::Release()
 {
-	pVertexBuffer_->Release();
-	pIndexBuffer_->Release();
-	pConstantBuffer_->Release();
+	SAFE_RELEASE(pConstantBuffer_);
+	SAFE_RELEASE(pIndexBuffer_);
+	SAFE_RELEASE(pVertexBuffer_);
 }
