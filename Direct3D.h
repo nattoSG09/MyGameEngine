@@ -1,6 +1,7 @@
 #pragma once
 //インクルード
 #include <d3d11.h>
+#include <cassert>
 
 //リンカ
 #pragma comment(lib, "d3d11.lib")
