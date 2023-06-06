@@ -58,13 +58,21 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 	//ウィンドウを表示
 	ShowWindow(hWnd, nCmdShow);
 
+	HRESULT hr;
 	//Direct3D初期化
-	Direct3D::Initialize(WINDOW_WIDTH, WINDOW_HEIGHT, hWnd);
+	hr = Direct3D::Initialize(WINDOW_WIDTH, WINDOW_HEIGHT, hWnd);
+	if (FAILED(hr)) {
+		MessageBox(nullptr, "Direct3Dの初期化に失敗しました", "エラー", MB_OK);
+		PostQuitMessage(0);
+	}
 
-	//Quadを召喚
+	//Quadを作成
 	Quad* pQuad = new Quad;
-	pQuad->Initialize();
-
+	hr = pQuad->Initialize();
+	if (FAILED(hr)) {
+		MessageBox(nullptr, "Quadの初期化に失敗しました", "エラー", MB_OK);
+		PostQuitMessage(0);
+	}
 	//メッセージループ（何か起きるのを待つ）
 	MSG msg;
 	ZeroMemory(&msg, sizeof(msg));
