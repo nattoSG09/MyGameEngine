@@ -80,11 +80,11 @@ HRESULT Quad::Initialize()
 	return S_OK;//成功時の戻り値
 }
 
-void Quad::Draw()
+void Quad::Draw(XMMATRIX& worldMatrix)
 {
 	//カメラの情報からコンスタントバッファをセット
 	CONSTANT_BUFFER cb;
-	cb.matWVP = XMMatrixTranspose(Camera::GetViewMatrix() * Camera::GetProjectionMatrix());
+	cb.matWVP = XMMatrixTranspose(worldMatrix * Camera::GetViewMatrix() * Camera::GetProjectionMatrix());
 
 	D3D11_MAPPED_SUBRESOURCE pdata;
 	Direct3D::pContext->Map(pConstantBuffer_, 0, D3D11_MAP_WRITE_DISCARD, 0, &pdata);	// GPUからのデータアクセスを止める

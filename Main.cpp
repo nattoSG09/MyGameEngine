@@ -8,8 +8,8 @@
 const char* WIN_CLASS_NAME = "SampleGame";  //ウィンドウクラス名
 const char* WIN_TITLE_NAME = "さんぷるげ～む";  //ウィンドウクラス名
 
-const int WINDOW_WIDTH = 1280;  //ウィンドウの幅
-const int WINDOW_HEIGHT = 720; //ウィンドウの高さ
+const int WINDOW_WIDTH = 800;  //ウィンドウの幅
+const int WINDOW_HEIGHT = 600; //ウィンドウの高さ
 
 //プロトタイプ宣言
 LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
@@ -93,11 +93,19 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 		//メッセージなし
 		else
 		{
-			//ゲームの処理
-			Direct3D::BeginDraw();
-			pQuad->Draw();
+			//Camaraの更新処理
 			Camera::Update();
 
+			//ゲームの処理
+			Direct3D::BeginDraw();
+
+			//Quadの描画処理
+			XMMATRIX rotateMatY = XMMatrixRotationY(XMConvertToRadians(45));
+			XMMATRIX rotateMatZ = XMMatrixRotationZ(XMConvertToRadians(-45));
+			XMMATRIX transMat = XMMatrixTranslation(4.0f, 0.0f, 0.0f);
+			XMMATRIX scaleMat = XMMatrixScaling(1.0f, 3.0f, 1.0f);
+			XMMATRIX mat =  scaleMat * rotateMatZ * transMat ;//左から順に合成
+			pQuad->Draw(mat);
 
 			//描画処理
 			Direct3D::EndDraw();

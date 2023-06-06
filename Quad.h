@@ -29,7 +29,7 @@ public:
 	HRESULT Initialize();
 
 	//•`‰æ
-	void Draw();
+	void Draw(XMMATRIX& worldMatrix);
 
 	//‰ð•ú
 	void Release();
