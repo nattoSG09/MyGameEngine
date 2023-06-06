@@ -79,8 +79,8 @@ HRESULT Direct3D::Initialize(int winW, int winH, HWND hWnd)
 		return hr;
 	}
 	//一時的にバックバッファを取得しただけなので解放
-	pBackBuffer->Release();
-
+	//pBackBuffer->Release();
+	SAFE_RELEASE(pBackBuffer);
 	///////////////////////////ビューポート（描画範囲）設定///////////////////////////////
 	//レンダリング結果を表示する範囲
 	D3D11_VIEWPORT vp;
