@@ -19,15 +19,35 @@ HRESULT Quad::Initialize()
 {
 	VERTEX vers[] =
 	{
-		{XMVectorSet(-1.0f,  1.0f, -1.0f, 0.0f),XMVectorSet(0.75f, 0.0f, 0.0f, 0.0f) },	// 前面（左上）
-		{XMVectorSet(1.0f,  1.0f, -1.0f, 0.0f),XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f) },	// 前面（右上）
-		{XMVectorSet(1.0f, -1.0f, -1.0f, 0.0f),XMVectorSet(0.0f, 0.5f, 0.0f, 0.0f) },	// 前面（右下）
-		{XMVectorSet(-1.0f, -1.0f, -1.0f, 0.0f),XMVectorSet(0.75f, 0.5f, 0.0f, 0.0f) },	// 前面（左下）
+		//面１
+		{XMVectorSet(-1.0f,  1.0f, -1.0f, 0.0f),XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f) },	// 前面（左上）0
+		{XMVectorSet(1.0f,  1.0f, -1.0f, 0.0f),XMVectorSet(0.25f, 0.0f, 0.0f, 0.0f) },	// 前面（右上）1
+		{XMVectorSet(1.0f, -1.0f, -1.0f, 0.0f),XMVectorSet(0.25f, 0.5f, 0.0f, 0.0f) },	// 前面（右下）2
+		{XMVectorSet(-1.0f, -1.0f, -1.0f, 0.0f),XMVectorSet(0.0f, 0.5f, 0.0f, 0.0f) },	// 前面（左下）3
 
-		{XMVectorSet(-1.0f, 1.0f, 1.0f, 0.0f),XMVectorSet(0.75f, 0.0f, 0.0f, 0.0f) },	// 背面(左上)
-		{XMVectorSet(1.0f, 1.0f, 1.0f, 0.0f),XMVectorSet(0.5f, 0.0f, 0.0f, 0.0f) },		// 背面(右上)
-		{XMVectorSet(1.0f, -1.0f, 1.0f, 0.0f),XMVectorSet(0.5f, 0.5f, 0.0f, 0.0f) },	// 背面(右下)
-		{XMVectorSet(-1.0f, -1.0f, 1.0f, 0.0f),XMVectorSet(0.75f, 0.5f, 0.0f, 0.0f) },	// 背面(左下)
+		//面４
+		{XMVectorSet(-1.0f, 1.0f, 1.0f, 0.0f),XMVectorSet(0.75f, 0.0f, 0.0f, 0.0f) },	// 測面左（左上）4
+		{XMVectorSet(-1.0f,  1.0f, -1.0f, 0.0f),XMVectorSet(1.0f, 0.0f, 0.0f, 0.0f) },	// 測面左（右上）5
+		{XMVectorSet(-1.0f, -1.0f, -1.0f, 0.0f),XMVectorSet(1.0f, 0.5f, 0.0f, 0.0f) },	// 測面左（右下）6
+		{XMVectorSet(-1.0f, -1.0f, 1.0f, 0.0f),XMVectorSet(0.75f, 0.5f, 0.0f, 0.0f) },	// 測面左（左下）7
+
+		//面３
+		{XMVectorSet(1.0f, 1.0f, -1.0f, 0.0f),XMVectorSet(0.5f, 0.0f, 0.0f, 0.0f) },	// 測面右（左上）8
+		{XMVectorSet(1.0f,  1.0f, 1.0f, 0.0f),XMVectorSet(0.75f, 0.0f, 0.0f, 0.0f) },	// 測面右（右上）9
+		{XMVectorSet(1.0f, -1.0f, 1.0f, 0.0f),XMVectorSet(0.75f, 0.5f, 0.0f, 0.0f) },	// 測面右（右下）10
+		{XMVectorSet(1.0f, -1.0f, -1.0f, 0.0f),XMVectorSet(0.5f, 0.5f, 0.0f, 0.0f) },	// 測面右（左下）11
+
+		//面６
+		{XMVectorSet(1.0f, 1.0f, -1.0f, 0.0f),XMVectorSet(0.5f, 0.0f, 0.0f, 0.0f) },	// 測面右（左上）8
+		{XMVectorSet(1.0f,  1.0f, 1.0f, 0.0f),XMVectorSet(0.75f, 0.0f, 0.0f, 0.0f) },	// 測面右（右上）9
+		{XMVectorSet(1.0f, -1.0f, 1.0f, 0.0f),XMVectorSet(0.75f, 0.5f, 0.0f, 0.0f) },	// 測面右（右下）10
+		{XMVectorSet(1.0f, -1.0f, -1.0f, 0.0f),XMVectorSet(0.5f, 0.5f, 0.0f, 0.0f) },	// 測面右（左下）11
+
+
+		//{XMVectorSet(-1.0f, 1.0f, 1.0f, 0.0f),XMVectorSet(0.75f, 0.0f, 0.0f, 0.0f) },	// 背面(左上)
+		//{XMVectorSet(1.0f, 1.0f, 1.0f, 0.0f),XMVectorSet(0.5f, 0.0f, 0.0f, 0.0f) },		// 背面(右上)
+		//{XMVectorSet(1.0f, -1.0f, 1.0f, 0.0f),XMVectorSet(0.5f, 0.5f, 0.0f, 0.0f) },	// 背面(右下)
+		//{XMVectorSet(-1.0f, -1.0f, 1.0f, 0.0f),XMVectorSet(0.75f, 0.5f, 0.0f, 0.0f) },	// 背面(左下)
 	};
 
 	// 頂点データ用バッファの設定・作成
@@ -37,10 +57,8 @@ HRESULT Quad::Initialize()
 	//インデックス情報
 	int index[] = { 
 		0,2,3, 0,1,2,	//面１
-		4,3,7, 4,0,3,	//面２
-		4,6,7, 4,5,6,	//面３
-		1,5,6, 1,6,2,
-
+		4,6,7, 4,5,6,	//面２
+		8,10,11, 8,9,10, 
 		
 	};
 
@@ -116,7 +134,7 @@ void Quad::Draw(XMMATRIX& worldMatrix)
 	Direct3D::pContext_->VSSetConstantBuffers(0, 1, &pConstantBuffer_);	//頂点シェーダー用	
 	Direct3D::pContext_->PSSetConstantBuffers(0, 1, &pConstantBuffer_);	//ピクセルシェーダー用
 
-	Direct3D::pContext_->DrawIndexed(24, 0, 0);
+	Direct3D::pContext_->DrawIndexed(18, 0, 0);
 }
 
 void Quad::Release()
