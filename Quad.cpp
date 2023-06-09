@@ -1,5 +1,8 @@
 #include "Quad.h"
 #include "Camera.h"
+#include <iostream>
+
+using std::size;
 
 
 Quad::Quad():
@@ -14,35 +17,32 @@ Quad::~Quad()
 
 HRESULT Quad::Initialize()
 {
-	// 頂点情報
-	VERTEX vertices[] =
+	VERTEX vers[] =
 	{
-		{XMVectorSet(-1.0f,  1.0f, 0.0f, 0.0f),XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f) },	// 四角形の頂点（左上）
-		{XMVectorSet(1.0f,  1.0f, 0.0f, 0.0f),XMVectorSet(1.0f, 0.0f, 0.0f, 0.0f) },	// 四角形の頂点（右上）
-		{XMVectorSet(1.0f, -1.0f, 0.0f, 0.0f),XMVectorSet(1.0f, 1.0f, 0.0f, 0.0f) },	// 四角形の頂点（右下）
-		{XMVectorSet(-1.0f, -1.0f, 0.0f, 0.0f),XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f) }	// 四角形の頂点（左下）
-		//XMVectorSet(0.0f, 2.0f, 0.0f, 0.0f)		//追加頂点(五角形)
+		{XMVectorSet(-1.0f,  1.0f, -1.0f, 0.0f),XMVectorSet(0.75f, 0.0f, 0.0f, 0.0f) },	// 前面（左上）
+		{XMVectorSet(1.0f,  1.0f, -1.0f, 0.0f),XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f) },	// 前面（右上）
+		{XMVectorSet(1.0f, -1.0f, -1.0f, 0.0f),XMVectorSet(0.0f, 0.5f, 0.0f, 0.0f) },	// 前面（右下）
+		{XMVectorSet(-1.0f, -1.0f, -1.0f, 0.0f),XMVectorSet(0.75f, 0.5f, 0.0f, 0.0f) },	// 前面（左下）
+
+		{XMVectorSet(-1.0f, 1.0f, 1.0f, 0.0f),XMVectorSet(0.75f, 0.0f, 0.0f, 0.0f) },	// 背面(左上)
+		{XMVectorSet(1.0f, 1.0f, 1.0f, 0.0f),XMVectorSet(0.5f, 0.0f, 0.0f, 0.0f) },		// 背面(右上)
+		{XMVectorSet(1.0f, -1.0f, 1.0f, 0.0f),XMVectorSet(0.5f, 0.5f, 0.0f, 0.0f) },	// 背面(右下)
+		{XMVectorSet(-1.0f, -1.0f, 1.0f, 0.0f),XMVectorSet(0.75f, 0.5f, 0.0f, 0.0f) },	// 背面(左下)
 	};
 
-	// 頂点データ用バッファの設定
-	D3D11_BUFFER_DESC bd_vertex;
-	bd_vertex.ByteWidth = sizeof(vertices);
-	bd_vertex.Usage = D3D11_USAGE_DEFAULT;
-	bd_vertex.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	bd_vertex.CPUAccessFlags = 0;
-	bd_vertex.MiscFlags = 0;
-	bd_vertex.StructureByteStride = 0;
-	D3D11_SUBRESOURCE_DATA data_vertex;
-	data_vertex.pSysMem = vertices;
-	
-	HRESULT hr;
-	hr = Direct3D::pDevice_->CreateBuffer(&bd_vertex, &data_vertex, &pVertexBuffer_);
-	if (FAILED(hr)) {
-		MessageBox(nullptr, "頂点データ用バッファの作成に失敗しました", "エラー", MB_OK);
-		return hr;//エラー時の戻り値
-	}
+	// 頂点データ用バッファの設定・作成
+	CreateVertexBuffer(vers, size(vers));
+	//CreateVertexBuffer(SetVertexDate().vertices,SetVertexDate().num);
+
 	//インデックス情報
-	int index[] = { 0,2,3, 0,1,2,};
+	int index[] = { 
+		0,2,3, 0,1,2,	//面１
+		4,3,7, 4,0,3,	//面２
+		4,6,7, 4,5,6,	//面３
+		1,5,6, 1,6,2,
+
+		
+	};
 
 	// インデックスバッファを生成する
 	D3D11_BUFFER_DESC   bd;
@@ -56,11 +56,13 @@ HRESULT Quad::Initialize()
 	InitData.pSysMem = index;
 	InitData.SysMemPitch = 0;
 	InitData.SysMemSlicePitch = 0;
+	HRESULT hr;
 	hr = Direct3D::pDevice_->CreateBuffer(&bd, &InitData, &pIndexBuffer_);
 	if (FAILED(hr)) {
 		MessageBox(nullptr, "インデックスバッファの作成に失敗しました", "エラー", MB_OK);
 		return hr;//エラー時の戻り値
 	}
+
 	//コンスタントバッファ作成
 	D3D11_BUFFER_DESC cb;
 	cb.ByteWidth = sizeof(CONSTANT_BUFFER);
@@ -114,7 +116,7 @@ void Quad::Draw(XMMATRIX& worldMatrix)
 	Direct3D::pContext_->VSSetConstantBuffers(0, 1, &pConstantBuffer_);	//頂点シェーダー用	
 	Direct3D::pContext_->PSSetConstantBuffers(0, 1, &pConstantBuffer_);	//ピクセルシェーダー用
 
-	Direct3D::pContext_->DrawIndexed(6, 0, 0);
+	Direct3D::pContext_->DrawIndexed(24, 0, 0);
 }
 
 void Quad::Release()
@@ -125,4 +127,42 @@ void Quad::Release()
 	SAFE_RELEASE(pConstantBuffer_);
 	SAFE_RELEASE(pIndexBuffer_);
 	SAFE_RELEASE(pVertexBuffer_);
+}
+
+VERTEX_DATE Quad::SetVertexDate()
+{
+	VERTEX vers[] =
+	{
+		{XMVectorSet(-1.0f,  1.0f, 0.0f, 0.0f),XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f) },	// 四角形の頂点（左上）
+		{XMVectorSet(1.0f,  1.0f, 0.0f, 0.0f),XMVectorSet(1.0f, 0.0f, 0.0f, 0.0f) },	// 四角形の頂点（右上）
+		{XMVectorSet(1.0f, -1.0f, 0.0f, 0.0f),XMVectorSet(1.0f, 1.0f, 0.0f, 0.0f) },	// 四角形の頂点（右下）
+		{XMVectorSet(-1.0f, -1.0f, 0.0f, 0.0f),XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f) }	// 四角形の頂点（左下）
+		//XMVectorSet(0.0f, 2.0f, 0.0f, 0.0f)		//追加頂点(五角形)
+	};
+
+	VERTEX_DATE ret;
+	ret.vertices = vers;
+	ret.num = 4;
+	return ret;
+}
+
+HRESULT Quad::CreateVertexBuffer(VERTEX* _ver,int _n)
+{
+	D3D11_BUFFER_DESC bd_vertex;
+	bd_vertex.ByteWidth = sizeof(VERTEX)* _n;
+	bd_vertex.Usage = D3D11_USAGE_DEFAULT;
+	bd_vertex.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	bd_vertex.CPUAccessFlags = 0;
+	bd_vertex.MiscFlags = 0;
+	bd_vertex.StructureByteStride = 0;
+	D3D11_SUBRESOURCE_DATA data_vertex;
+	data_vertex.pSysMem = _ver;
+
+	HRESULT hr;
+	hr = Direct3D::pDevice_->CreateBuffer(&bd_vertex, &data_vertex, &pVertexBuffer_);
+	if (FAILED(hr)) {
+		MessageBox(nullptr, "頂点データ用バッファの作成に失敗しました", "エラー", MB_OK);
+		return hr;//エラー時の戻り値
+	}
+	return S_OK;
 }

@@ -20,10 +20,15 @@ struct VERTEX
 	XMVECTOR uv;
 };
 
+struct VERTEX_DATE
+{
+	VERTEX* vertices;
+	int num;
+};
 
 class Quad
 {
-private:
+protected:
 	ID3D11Buffer* pVertexBuffer_;	//頂点バッファ
 	ID3D11Buffer* pIndexBuffer_;	//インデックスバッファ
 	ID3D11Buffer* pConstantBuffer_;	//コンスタントバッファ
@@ -36,12 +41,21 @@ public:
 	~Quad();
 
 	//初期化
-	HRESULT Initialize();
+	virtual HRESULT Initialize();
 
 	//描画
-	void Draw(XMMATRIX& worldMatrix);
+	virtual void Draw(XMMATRIX& worldMatrix);
 
 	//解放
-	void Release();
+	virtual void Release();
+
+	//頂点データの初期化
+	virtual VERTEX_DATE SetVertexDate();
+	
+	//頂点データ用のバッファを設定・作成する
+	//引数１：頂点情報	引数２：頂点数
+	HRESULT CreateVertexBuffer(VERTEX* _ver,int _n);
+
+
 };
 

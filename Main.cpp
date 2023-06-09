@@ -2,6 +2,7 @@
 #include <Windows.h>
 #include "Direct3D.h"
 #include "Quad.h"
+//#include "Dice.h"
 #include "Camera.h"
 
 //’è”éŒ¾
@@ -75,6 +76,9 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 		PostQuitMessage(0);
 	}
 
+	//Dice* pDice = new Dice;
+	//hr = pDice->Initialize();
+
 	//ƒJƒƒ‰‚ğ‰Šú‰»
 	Camera::Initialize(winW,winH);
 
@@ -104,6 +108,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 			angle += 0.1f;
 			XMMATRIX rotateMatY = XMMatrixRotationY(XMConvertToRadians(angle));
 			pQuad->Draw(rotateMatY);
+			//pDice->Draw(rotateMatY);
 
 			//•`‰æˆ—
 			Direct3D::EndDraw();
@@ -112,7 +117,9 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 
 	//‰ğ•úˆ—
 	Direct3D::Release();
+	//SAFE_DELETE(pDice);
 	SAFE_DELETE(pQuad);
+
 	return 0;
 }
 
