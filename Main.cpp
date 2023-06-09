@@ -100,12 +100,10 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 			Direct3D::BeginDraw();
 
 			//Quad‚Ì•`‰æˆ—
-			XMMATRIX rotateMatY = XMMatrixRotationY(XMConvertToRadians(45));
-			XMMATRIX rotateMatZ = XMMatrixRotationZ(XMConvertToRadians(-45));
-			XMMATRIX transMat = XMMatrixTranslation(4.0f, 0.0f, 0.0f);
-			XMMATRIX scaleMat = XMMatrixScaling(1.0f, 3.0f, 1.0f);
-			XMMATRIX mat =  scaleMat * rotateMatZ * transMat ;//¶‚©‚ç‡‚É‡¬
-			pQuad->Draw(mat);
+			static float angle = 0;
+			angle += 0.1f;
+			XMMATRIX rotateMatY = XMMatrixRotationY(XMConvertToRadians(angle));
+			pQuad->Draw(rotateMatY);
 
 			//•`‰æˆ—
 			Direct3D::EndDraw();
