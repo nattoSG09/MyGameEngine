@@ -2,9 +2,9 @@
 
 //インクルード
 #include <DirectXMath.h>
+#include <string>
 #include "Direct3D.h"
 #include "Texture.h"
-
 using namespace DirectX;
 
 //コンスタントバッファー
@@ -18,12 +18,6 @@ struct VERTEX
 {
 	XMVECTOR position;
 	XMVECTOR uv;
-};
-
-struct VERTEX_DATE
-{
-	VERTEX* vertices;
-	int num;
 };
 
 class Quad
@@ -49,13 +43,24 @@ public:
 	//解放
 	virtual void Release();
 
-	//頂点データの初期化
-	virtual VERTEX_DATE SetVertexDate();
-	
-	//頂点データ用のバッファを設定・作成する
+	//バッファを作成
+	//引数１：頂点情報　引数２：頂点数
+	//引数３：インデックス情報　引数４：インデックス数
+	HRESULT CreateBuffers(VERTEX* _ver,int _vn,int* _index,int _in,string _imageData);
+
+	//バッファを設定
+	void SetBuffers(XMMATRIX& worldMatrix);
+
+	//頂点データ用のバッファを作成する
 	//引数１：頂点情報	引数２：頂点数
 	HRESULT CreateVertexBuffer(VERTEX* _ver,int _n);
 
+	//インデックスバッファを作成する
+	//引数１：インデックス情報	引数２　インデックス数
+	HRESULT CreateIndexBuffer(int* _index, int _n);
 
+	//コンスタントバッファを作成する
+	//引数：　画像データ
+	HRESULT CreateConstantBuffer(string _imageData);
 };
 

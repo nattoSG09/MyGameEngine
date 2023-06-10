@@ -1,8 +1,8 @@
 //インクルード
 #include <Windows.h>
 #include "Direct3D.h"
-#include "Quad.h"
-//#include "Dice.h"
+//#include "Quad.h"
+#include "Dice.h"
 #include "Camera.h"
 
 //定数宣言
@@ -69,15 +69,15 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 	}
 
 	//Quadを作成
-	Quad* pQuad = new Quad;
-	hr = pQuad->Initialize();
+	//Quad* pQuad = new Quad;
+	//hr = pQuad->Initialize();
+
+	Dice* pDice = new Dice;
+	hr = pDice->Initialize();
 	if (FAILED(hr)) {
-		MessageBox(nullptr, "Quadの初期化に失敗しました", "エラー", MB_OK);
+		MessageBox(nullptr, "初期化に失敗しました", "エラー", MB_OK);
 		PostQuitMessage(0);
 	}
-
-	//Dice* pDice = new Dice;
-	//hr = pDice->Initialize();
 
 	//カメラを初期化
 	Camera::Initialize(winW,winH);
@@ -103,12 +103,18 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 			//ゲームの処理
 			Direct3D::BeginDraw();
 
-			//Quadの描画処理
+			//回転行列を作成
 			static float angle = 0;
-			angle += 0.1f;
+			angle += 0.01f;
+
+			XMMATRIX rotateMatX = XMMatrixRotationX(XMConvertToRadians(angle));
 			XMMATRIX rotateMatY = XMMatrixRotationY(XMConvertToRadians(angle));
-			pQuad->Draw(rotateMatY);
-			//pDice->Draw(rotateMatY);
+			XMMATRIX rotateMatZ = XMMatrixRotationZ(XMConvertToRadians(angle));
+
+			//回転行列を組み合わせる
+			XMMATRIX mat = rotateMatZ * rotateMatY * rotateMatX;
+			//pQuad->Draw(rotateMatY);
+			pDice->Draw(mat);
 
 			//描画処理
 			Direct3D::EndDraw();
@@ -117,8 +123,8 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 
 	//解放処理
 	Direct3D::Release();
-	//SAFE_DELETE(pDice);
-	SAFE_DELETE(pQuad);
+	SAFE_DELETE(pDice);
+	//SAFE_DELETE(pQuad);
 
 	return 0;
 }

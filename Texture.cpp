@@ -56,7 +56,6 @@ HRESULT Texture::Load(std::string fileName)
 	srv.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
 	srv.Texture2D.MipLevels = 1;
 	hr = CreateShaderResourceView(Direct3D::pDevice_, image.GetImages(), image.GetImageCount(), metadata, &pSRV_);
-	
 	if (FAILED(hr)) {
 		MessageBox(nullptr, "シェーダ―リソースビューの作成に失敗しました", "エラー", MB_OK);
 		return E_FAIL;
