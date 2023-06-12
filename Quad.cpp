@@ -6,6 +6,7 @@ using std::size;
 
 
 Quad::Quad()
+	:pVertexBuffer_(nullptr),pTexture_(nullptr),pIndexBuffer_(nullptr),pConstantBuffer_(nullptr)
 {
 }
 
@@ -46,9 +47,7 @@ void Quad::Draw(XMMATRIX& worldMatrix)
 
 void Quad::Release()
 {
-	
 	SAFE_DELETE(pTexture_);
-
 	SAFE_RELEASE(pConstantBuffer_);
 	SAFE_RELEASE(pIndexBuffer_);
 	SAFE_RELEASE(pVertexBuffer_);

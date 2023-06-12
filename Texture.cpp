@@ -13,7 +13,7 @@ Texture::Texture()
 
 Texture::~Texture()
 {
-	//Release();
+	Release();
 }
 
 HRESULT Texture::Load(std::string fileName)
