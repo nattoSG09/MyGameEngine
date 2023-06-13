@@ -1,29 +1,29 @@
+//インクルード
 #include "Quad.h"
 #include "Camera.h"
-#include <iostream>
 
-using std::size;
-
-
+//コンストラクタ
 Quad::Quad()
 	:pVertexBuffer_(nullptr),pTexture_(nullptr),pIndexBuffer_(nullptr),pConstantBuffer_(nullptr)
 {
 }
 
+//デストラクタ
 Quad::~Quad()
 {
 	Release();
 }
 
+//初期化
 HRESULT Quad::Initialize()
 {
 	//頂点情報
-	VERTEX vers[] =
+	VERTEX vertices[] =
 	{
-		{XMVectorSet(-1.0f,  1.0f, 0.0f, 0.0f),XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f) },	// 前面（左上）0
-		{XMVectorSet(1.0f,  1.0f, 0.0f, 0.0f),XMVectorSet(1.0f, 0.0f, 0.0f, 0.0f) },	// 前面（右上）1
-		{XMVectorSet(1.0f, -1.0f, 0.0f, 0.0f),XMVectorSet(1.0f, 1.0f, 0.0f, 0.0f) },	// 前面（右下）2
-		{XMVectorSet(-1.0f, -1.0f, 0.0f, 0.0f),XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f) },	// 前面（左下）3
+		{XMVectorSet(-1.0f,  1.0f, 0.0f, 0.0f),XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f) ,XMVectorSet(0.0f,0.0f,-1.0f,0.0f) },	// 前面（左上）0
+		{XMVectorSet(1.0f,  1.0f, 0.0f, 0.0f),XMVectorSet(1.0f, 0.0f, 0.0f, 0.0f) ,XMVectorSet(0.0f,0.0f,-1.0f,0.0f) },	// 前面（右上）1
+		{XMVectorSet(1.0f, -1.0f, 0.0f, 0.0f),XMVectorSet(1.0f, 1.0f, 0.0f, 0.0f) ,XMVectorSet(0.0f,0.0f,-1.0f,0.0f) },	// 前面（右下）2
+		{XMVectorSet(-1.0f, -1.0f, 0.0f, 0.0f),XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f) ,XMVectorSet(0.0f,0.0f,-1.0f,0.0f) },	// 前面（左下）3
 	};
 
 	//インデックス情報
@@ -31,7 +31,7 @@ HRESULT Quad::Initialize()
 		 0, 2, 3,  0, 1, 2
 	};
 
-	HRESULT hr = CreateBuffers(vers,(int)size(vers),index,(int)size(index),"Assets\\Dice.png");
+	HRESULT hr = CreateBuffers(SET_ARRAY_DATA(vertices), SET_ARRAY_DATA(index), "Assets\\Dice.png");
 	if (FAILED(hr)) {
 		MessageBox(nullptr, "バッファの作成に失敗しました", "エラー", MB_OK);
 		return hr;
@@ -39,12 +39,14 @@ HRESULT Quad::Initialize()
 	return S_OK;
 }
 
+//描画
 void Quad::Draw(XMMATRIX& worldMatrix)
 {
 	Quad::SetBuffers(worldMatrix);
 	Direct3D::pContext_->DrawIndexed(6, 0, 0);
 }
 
+//解放
 void Quad::Release()
 {
 	SAFE_DELETE(pTexture_);
@@ -53,6 +55,7 @@ void Quad::Release()
 	SAFE_RELEASE(pVertexBuffer_);
 }
 
+//バッファを作成
 HRESULT Quad::CreateBuffers(VERTEX* _ver,int _vn, int* _index, int _in,string _imageData)
 {
 	HRESULT hr;
@@ -79,11 +82,14 @@ HRESULT Quad::CreateBuffers(VERTEX* _ver,int _vn, int* _index, int _in,string _i
 	return S_OK;
 }
 
+//バッファをセット
 void Quad::SetBuffers(XMMATRIX& worldMatrix)
 {
 	//カメラの情報からコンスタントバッファをセット
 	CONSTANT_BUFFER cb;
 	cb.matWVP = XMMatrixTranspose(worldMatrix * Camera::GetViewMatrix() * Camera::GetProjectionMatrix());
+	cb.matW = XMMatrixTranspose(worldMatrix);
+	cb.light_ = XMVectorSet(-1, 0.5, -0.7, 0.0f);
 
 	D3D11_MAPPED_SUBRESOURCE pdata;
 	Direct3D::pContext_->Map(pConstantBuffer_, 0, D3D11_MAP_WRITE_DISCARD, 0, &pdata);	// GPUからのデータアクセスを止める
@@ -113,6 +119,7 @@ void Quad::SetBuffers(XMMATRIX& worldMatrix)
 
 }
 
+//頂点用のバッファを作成
 HRESULT Quad::CreateVertexBuffer(VERTEX* _ver,int _n)
 {
 	D3D11_BUFFER_DESC bd_vertex;
@@ -132,6 +139,7 @@ HRESULT Quad::CreateVertexBuffer(VERTEX* _ver,int _n)
 	return S_OK;
 }
 
+//インデックスバッファを作成
 HRESULT Quad::CreateIndexBuffer(int* _index, int _n)
 {
 	D3D11_BUFFER_DESC   bd;
@@ -153,6 +161,7 @@ HRESULT Quad::CreateIndexBuffer(int* _index, int _n)
 	return S_OK;
 }
 
+//コンスタントバッファを作成
 HRESULT Quad::CreateConstantBuffer(string _imageData)
 {
 	D3D11_BUFFER_DESC cb;

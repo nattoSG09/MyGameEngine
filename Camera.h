@@ -1,7 +1,10 @@
 #pragma once
+
+//インクルード
 #include "Direct3D.h"
 #include <DirectXMath.h>
 
+//using宣言
 using namespace DirectX;
 
 //-----------------------------------------------------------

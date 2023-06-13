@@ -1,19 +1,22 @@
+//インクルード
 #include "Dice.h"
-using std::size;
 
+//コンストラクタ
 Dice::Dice()
 {
 }
 
+//デストラクタ
 Dice::~Dice()
 {
     Release();
 }
 
+//初期化
 HRESULT Dice::Initialize()
 {
 	//頂点情報
-	VERTEX vers[] =
+	VERTEX vertices[] =
 	{
 		//面１
 		{XMVectorSet(-1.0f,  1.0f, -1.0f, 0.0f),XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f) },	// 前面（左上）0
@@ -62,7 +65,7 @@ HRESULT Dice::Initialize()
 		20,22,23, 20,21,22,		//面２
 	};
 
-	HRESULT hr = CreateBuffers(vers, (int)size(vers), index, (int)size(index), "Assets\\Dice.png");
+	HRESULT hr = CreateBuffers(SET_ARRAY_DATA(vertices), SET_ARRAY_DATA(index), "Assets\\Dice.png");
 	if (FAILED(hr)) {
 		MessageBox(nullptr, "バッファの作成に失敗しました", "エラー", MB_OK);
 		return hr;
@@ -70,6 +73,7 @@ HRESULT Dice::Initialize()
 	return S_OK;
 }
 
+//描画
 void Dice::Draw(XMMATRIX& worldMatrix)
 {
 	Quad::SetBuffers(worldMatrix);

@@ -1,4 +1,6 @@
 #pragma once
+
+//インクルード
 #include "Quad.h"
 
 class Dice : public Quad

@@ -1,3 +1,4 @@
+//インクルード
 #include "Camera.h"
 
 //定数宣言
@@ -6,8 +7,8 @@ const XMVECTOR INITIAL_TARGET = XMVectorSet(0, 0, 0, 0);	//カメラの焦点
 const float NEAR_Z = 0.1f;	//近クリッピング面までの距離
 const float FAR_Z = 100.0f;	//遠クリッピング面までの距離
 
+//変数
 namespace Camera {
-	//変数
 	XMVECTOR position_;	//カメラの位置（視点）
 	XMVECTOR target_;	//見る位置（焦点）
 	XMMATRIX viewMatrix_;	//ビュー行列

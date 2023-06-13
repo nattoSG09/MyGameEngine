@@ -1,21 +1,24 @@
 //インクルード
+#include <DirectXTex.h>
 #include "Texture.h"
 #include"Direct3D.h"
-#include <DirectXTex.h>
 
 //リンカ
 #pragma comment( lib, "DirectxTex.lib" )
 
+//コンストラクタ
 Texture::Texture()
 	:pSampler_(nullptr),pSRV_(nullptr)
 {
 }
 
+//デストラクタ
 Texture::~Texture()
 {
 	Release();
 }
 
+//テクスチャデータをロード
 HRESULT Texture::Load(std::string fileName)
 {
 	using namespace DirectX;
@@ -64,6 +67,7 @@ HRESULT Texture::Load(std::string fileName)
 	return S_OK;
 }
 
+//解放
 void Texture::Release()
 {
 	
@@ -71,11 +75,13 @@ void Texture::Release()
 	SAFE_RELEASE(pSampler_);
 }
 
+//サンプラー取得
 ID3D11SamplerState* Texture::GetSampler()
 {
 	return pSampler_;
 }
 
+//シェーダ―リソースビュー取得
 ID3D11ShaderResourceView* Texture::GetSRV()
 {
 	return pSRV_;

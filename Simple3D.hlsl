@@ -5,12 +5,14 @@ Texture2D	g_texture : register(t0);	//テクスチャー
 SamplerState	g_sampler : register(s0);	//サンプラー
 
 //───────────────────────────────────────
- // コンスタントバッファ
+// コンスタントバッファ
 // DirectX 側から送信されてくる、ポリゴン頂点以外の諸情報の定義
 //───────────────────────────────────────
 cbuffer global
 {
-	float4x4	matWVP;			// ワールド・ビュー・プロジェクションの合成行列
+	float4x4	matWVP;		// ワールド・ビュー・プロジェクションの合成行列
+	float4x4	matW;		// ワールド行列
+	float4		light_;
 };
 
 //───────────────────────────────────────
@@ -18,14 +20,15 @@ cbuffer global
 //───────────────────────────────────────
 struct VS_OUT
 {
-	float4 pos	: SV_POSITION;	//位置
-	float2 uv	: TEXCOORD;	//UV座標
+	float4 pos		: SV_POSITION;	//位置
+	float2 uv		: TEXCOORD;	//UV座標
+	float4 color	: COLOR;	//色（輝度）
 };
 
 //───────────────────────────────────────
 // 頂点シェーダ
 //───────────────────────────────────────
-VS_OUT VS(float4 pos : POSITION,float4 uv : TEXCOORD)
+VS_OUT VS(float4 pos : POSITION,float4 uv : TEXCOORD, float4 normal : NORMAL)
 {
 	//ピクセルシェーダーへ渡す情報
 	VS_OUT outData;
@@ -37,6 +40,14 @@ VS_OUT VS(float4 pos : POSITION,float4 uv : TEXCOORD)
 	//テクスチャデータをピクセルシェーダーへ
 	outData.uv = uv;
 
+	//法線を回転
+	normal = mul(normal,matW);
+
+	//輝度情報をピクセルシェーダ―へ
+	float4 light = light_;
+	light = normalize(light);
+	outData.color = dot(normal, light);
+
 	//まとめて出力
 	return outData;
 }
@@ -46,5 +57,5 @@ VS_OUT VS(float4 pos : POSITION,float4 uv : TEXCOORD)
 //───────────────────────────────────────
 float4 PS(VS_OUT inData) : SV_Target
 {
-	return g_texture.Sample(g_sampler, inData.uv);
+	return g_texture.Sample(g_sampler, inData.uv) * inData.color;
 }

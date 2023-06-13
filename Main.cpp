@@ -1,27 +1,8 @@
 //インクルード
 #include <Windows.h>
 #include "Direct3D.h"
-//#include "Quad.h"
-#include "Dice.h"
+#include "Quad.h"
 #include "Camera.h"
-
-//あとで消します
-//Diceの回転用行列を作成する
-XMMATRIX RotateDice(const float _angle) {
-	//回転行列を作成
-	static float angle = _angle;
-	angle += 0.02f;
-
-	XMMATRIX rotateMatX = XMMatrixRotationX(XMConvertToRadians(angle));
-	XMMATRIX rotateMatY = XMMatrixRotationY(XMConvertToRadians(angle));
-	XMMATRIX rotateMatZ = XMMatrixRotationZ(XMConvertToRadians(angle));
-
-	//回転行列を組み合わせる
-	XMMATRIX mat = rotateMatZ * rotateMatX * rotateMatY;
-	return mat;
-}
-
-
 
 //定数宣言
 const char* WIN_CLASS_NAME = "SampleGame";  //ウィンドウクラス名
@@ -87,12 +68,8 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 	}
 
 	//Quadを作成
-	//Quad* pQuad = new Quad;
-	//hr = pQuad->Initialize();
-
-	//Diceを作成
-	Dice* pDice = new Dice;
-	hr = pDice->Initialize();
+	Quad* pQuad = new Quad;
+	hr = pQuad->Initialize();
 	if (FAILED(hr)) {
 		MessageBox(nullptr, "Diceの初期化に失敗しました", "エラー", MB_OK);
 		PostQuitMessage(0);
@@ -122,13 +99,9 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 			//ゲームの処理
 			Direct3D::BeginDraw();
 
-			static float angle = 0;
-			angle += 0.02f;
-
+			static float angle = 0;angle += 0.03f;
 			XMMATRIX rotateMatY = XMMatrixRotationY(XMConvertToRadians(angle));
-			XMMATRIX mat = RotateDice(angle);
-			//pQuad->Draw(rotateMatY);
-			pDice->Draw(mat);
+			pQuad->Draw(rotateMatY);
 
 			//描画処理
 			Direct3D::EndDraw();
@@ -137,8 +110,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 
 	//解放処理
 	Direct3D::Release();
-	SAFE_DELETE(pDice);
-	//SAFE_DELETE(pQuad);
+	SAFE_DELETE(pQuad);
 
 	return 0;
 }

@@ -1,9 +1,11 @@
 #pragma once
+
 //インクルード
 #include <d3d11.h>
 #include <string>
 #include <wrl.h>
 
+//using宣言
 using namespace Microsoft::WRL;
 using std::string;
 
