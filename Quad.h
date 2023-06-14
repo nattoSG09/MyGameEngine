@@ -18,7 +18,7 @@ struct CONSTANT_BUFFER
 {
 	XMMATRIX	matWVP;
 	XMMATRIX	matW;
-	XMVECTOR	light_;
+	XMVECTOR	lightPos;
 };
 
 //í∏ì_èÓïÒ

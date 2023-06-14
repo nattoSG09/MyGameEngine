@@ -12,7 +12,7 @@ cbuffer global
 {
 	float4x4	matWVP;		// ワールド・ビュー・プロジェクションの合成行列
 	float4x4	matW;		// ワールド行列
-	float4		light_;
+	float4		lightPos;		//光の位置
 };
 
 //───────────────────────────────────────
@@ -20,9 +20,9 @@ cbuffer global
 //───────────────────────────────────────
 struct VS_OUT
 {
-	float4 pos		: SV_POSITION;	//位置
-	float2 uv		: TEXCOORD;	//UV座標
-	float4 color	: COLOR;	//色（輝度）
+	float4 pos			: SV_POSITION;	//位置
+	float2 uv			: TEXCOORD;	//UV座標
+	float4 color		: COLOR;	//色（輝度）
 };
 
 //───────────────────────────────────────
@@ -44,9 +44,9 @@ VS_OUT VS(float4 pos : POSITION,float4 uv : TEXCOORD, float4 normal : NORMAL)
 	normal = mul(normal,matW);
 
 	//輝度情報をピクセルシェーダ―へ
-	float4 light = light_;
+	float4 light = lightPos;
 	light = normalize(light);
-	outData.color = dot(normal, light);
+	outData.color = clamp(dot(normal, light), 0, 1);
 
 	//まとめて出力
 	return outData;
@@ -57,5 +57,10 @@ VS_OUT VS(float4 pos : POSITION,float4 uv : TEXCOORD, float4 normal : NORMAL)
 //───────────────────────────────────────
 float4 PS(VS_OUT inData) : SV_Target
 {
-	return g_texture.Sample(g_sampler, inData.uv) * inData.color;
+	float4 lightSource = float4(1.0f,1.0f,1.0f,1.0f);//ライトの色
+	float4 ambientSource = float4(0.2, 0.2, 0.2, 1.0);
+	float4 diffuse = lightSource * g_texture.Sample(g_sampler, inData.uv) * inData.color;
+	float4 ambient = lightSource * g_texture.Sample(g_sampler, inData.uv) * ambientSource;
+	return diffuse + ambient;
+
 }

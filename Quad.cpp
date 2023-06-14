@@ -89,7 +89,8 @@ void Quad::SetBuffers(XMMATRIX& worldMatrix)
 	CONSTANT_BUFFER cb;
 	cb.matWVP = XMMatrixTranspose(worldMatrix * Camera::GetViewMatrix() * Camera::GetProjectionMatrix());
 	cb.matW = XMMatrixTranspose(worldMatrix);
-	cb.light_ = XMVectorSet(-1, 0.5, -0.7, 0.0f);
+	cb.lightPos = XMVectorSet(-1.0f, 0.5f, -0.7f, 0.0f);
+	
 
 	D3D11_MAPPED_SUBRESOURCE pdata;
 	Direct3D::pContext_->Map(pConstantBuffer_, 0, D3D11_MAP_WRITE_DISCARD, 0, &pdata);	// GPUからのデータアクセスを止める
