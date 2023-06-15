@@ -3,6 +3,10 @@
 //インクルード
 #include <d3d11.h>
 #include <cassert>
+#include <string>
+
+//using宣言
+using std::string;
 
 //リンカ
 #pragma comment(lib, "d3d11.lib")
@@ -21,7 +25,7 @@ namespace Direct3D
 	HRESULT Initialize(int winW, int winH, HWND hWnd);
 
 	//シェーダー準備
-	HRESULT InitShader();
+	HRESULT InitShader(string _hlslFileName);
 
 	//描画開始
 	void BeginDraw();
@@ -32,4 +36,6 @@ namespace Direct3D
 	//解放
 	void Release();
 
+	//インプットレイアウトデータをセット
+	HRESULT D3DCreateInputLayout(string _hlslFileName, ID3DBlob* pCompileVS);
 };

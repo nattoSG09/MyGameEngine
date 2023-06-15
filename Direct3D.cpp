@@ -1,10 +1,14 @@
 //インクルード
 #include <d3dcompiler.h>
 #include <DirectXMath.h>
+#include <unordered_map>
 #include "Direct3D.h"
+#include <functional>
 
 //using宣言
 using namespace DirectX;
+using std::unordered_map;
+using std::function;
 
 //変数
 namespace Direct3D
@@ -102,7 +106,7 @@ HRESULT Direct3D::Initialize(int winW, int winH, HWND hWnd)
 	pContext_->RSSetViewports(1, &vp);
 
 	//シェーダー準備
-	hr = InitShader();
+	hr = InitShader("Simple3D.hlsl");
 	if (FAILED(hr)) {
 		MessageBox(nullptr, "シェーダーの準備に失敗しました", "エラー", MB_OK);
 		return hr;
@@ -111,13 +115,18 @@ HRESULT Direct3D::Initialize(int winW, int winH, HWND hWnd)
 }
 
 //シェーダー準備
-HRESULT Direct3D::InitShader()
+HRESULT Direct3D::InitShader(string _hlslFileName)
 {
 	HRESULT hr;
 
+	//マルチバイト文字→ワイド文字へ変換
+	wchar_t wtext[FILENAME_MAX];
+	size_t ret;
+	mbstowcs_s(&ret, wtext, _hlslFileName.c_str(), _hlslFileName.length());
+
 	// 頂点シェーダの作成（コンパイル）
 	ID3DBlob* pCompileVS = nullptr;
-	D3DCompileFromFile(L"Simple3D.hlsl", nullptr, nullptr, "VS", "vs_5_0", NULL, 0, &pCompileVS, NULL);
+	D3DCompileFromFile(wtext, nullptr, nullptr, "VS", "vs_5_0", NULL, 0, &pCompileVS, NULL);
 	assert(pCompileVS != nullptr);
 
 	hr = pDevice_->CreateVertexShader(pCompileVS->GetBufferPointer(), pCompileVS->GetBufferSize(), NULL, &pVertexShader_);
@@ -125,13 +134,9 @@ HRESULT Direct3D::InitShader()
 		MessageBox(nullptr, "頂点シェーダの作成に失敗しました", "エラー", MB_OK);
 		return hr;
 	}
-	//頂点インプットレイアウト
-	D3D11_INPUT_ELEMENT_DESC layout[] = {
-		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0,  D3D11_INPUT_PER_VERTEX_DATA, 0 },	//位置
-		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, sizeof(XMVECTOR) , D3D11_INPUT_PER_VERTEX_DATA, 0 },//UV座標
-		{ "NORMAL",	0, DXGI_FORMAT_R32G32B32_FLOAT, 0, sizeof(XMVECTOR) * 2 ,	D3D11_INPUT_PER_VERTEX_DATA, 0 },//法線
-	};
-	hr = pDevice_->CreateInputLayout(layout, 3, pCompileVS->GetBufferPointer(), pCompileVS->GetBufferSize(), &pVertexLayout_);
+
+
+	hr = D3DCreateInputLayout(_hlslFileName, pCompileVS);
 	if (FAILED(hr)) {
 		MessageBox(nullptr, "頂点インプットレイアウトに失敗しました", "エラー", MB_OK);
 		return hr;
@@ -140,7 +145,7 @@ HRESULT Direct3D::InitShader()
 
 	// ピクセルシェーダの作成（コンパイル）
 	ID3DBlob* pCompilePS = nullptr;
-	D3DCompileFromFile(L"Simple3D.hlsl", nullptr, nullptr, "PS", "ps_5_0", NULL, 0, &pCompilePS, NULL);
+	D3DCompileFromFile(wtext, nullptr, nullptr, "PS", "ps_5_0", NULL, 0, &pCompilePS, NULL);
 	assert(pCompilePS != nullptr);
 	hr = pDevice_->CreatePixelShader(pCompilePS->GetBufferPointer(), pCompilePS->GetBufferSize(), NULL, &pPixelShader_);
 	if (FAILED(hr)) {
@@ -199,4 +204,28 @@ void Direct3D::Release()
 	SAFE_RELEASE(pContext_);
 	SAFE_RELEASE(pDevice_);
 
+}
+
+HRESULT Direct3D::D3DCreateInputLayout(string _hlslFileName, ID3DBlob* pCompileVS)
+{
+	HRESULT hr;
+
+	if (_hlslFileName == "Simple3D.hlsl") {
+
+		D3D11_INPUT_ELEMENT_DESC layout[] = {
+		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0,  D3D11_INPUT_PER_VERTEX_DATA, 0 },	//位置
+		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, sizeof(XMVECTOR) , D3D11_INPUT_PER_VERTEX_DATA, 0 },//UV座標
+		{ "NORMAL",	0, DXGI_FORMAT_R32G32B32_FLOAT, 0, sizeof(XMVECTOR) * 2 ,	D3D11_INPUT_PER_VERTEX_DATA, 0 },//法線
+		};
+		hr = pDevice_->CreateInputLayout(layout, 3, pCompileVS->GetBufferPointer(), pCompileVS->GetBufferSize(), &pVertexLayout_);
+		return hr;
+	}
+	else if (_hlslFileName == "") {
+
+	}
+	else {
+		return E_FAIL;
+	}
+
+	return S_OK;
 }

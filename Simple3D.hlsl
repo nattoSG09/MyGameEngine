@@ -62,5 +62,4 @@ float4 PS(VS_OUT inData) : SV_Target
 	float4 diffuse = lightSource * g_texture.Sample(g_sampler, inData.uv) * inData.color;
 	float4 ambient = lightSource * g_texture.Sample(g_sampler, inData.uv) * ambientSource;
 	return diffuse + ambient;
-
 }
