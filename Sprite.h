@@ -26,9 +26,10 @@ class Sprite
 
 protected:
 
-	vector<VERTEX> veritices_;	//頂点情報(配列)
 
+	vector<VERTEX> veritices_;	//頂点情報(配列)
 	vector<int> index_;	//インデックス情報(配列)
+	TexMetadata image_;	//画像情報
 
 	ID3D11Buffer* pVertexBuffer_;	//頂点バッファ
 	ID3D11Buffer* pIndexBuffer_;	//インデックスバッファ
@@ -40,7 +41,7 @@ public:
 	~Sprite();
 
 	//初期化
-	virtual HRESULT Initialize();
+	virtual HRESULT Initialize(int winW,int winH);
 
 	//描画
 	virtual void Draw(XMMATRIX& worldMatrix);
@@ -51,7 +52,7 @@ public:
 private:
 	//ー－－－－－Initializeから呼ばれる関数ー－－－－－
 
-	virtual void InitVertexData();
+	virtual void InitVertexData(int winW, int winH);
 	HRESULT CreateVertexBuffer();
 
 	virtual void InitIndexData();
@@ -64,6 +65,7 @@ private:
 	//ー－－－－－ーDrawから呼ばれる関数ーー－－－－－
 	void PassDataToCB(XMMATRIX& worldMatrix);
 	void SetBufferToPipeline();
+
 
 };
 

@@ -78,7 +78,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 
 	//Sprite‚ğì¬
 	Sprite* pSprite = new Sprite;
-	hr = pSprite->Initialize();
+	hr = pSprite->Initialize(winW,winH);
 
 	if (FAILED(hr)) {
 		MessageBox(nullptr, "Sprite‚Ì‰Šú‰»‚É¸”s‚µ‚Ü‚µ‚½", "ƒGƒ‰[", MB_OK);
@@ -109,14 +109,15 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 			//ƒQ[ƒ€‚Ìˆ—
 			Direct3D::BeginDraw();
 
-			static float angle = 0;angle += 0.1f;
+			static float angle = 0;angle += 1.0f;
 			XMMATRIX rotateMatY = XMMatrixRotationY(XMConvertToRadians(0));
 			XMMATRIX rotateMatX = XMMatrixRotationX(XMConvertToRadians(angle));
 			XMMATRIX rotateMatZ = XMMatrixRotationZ(XMConvertToRadians(angle));
 			XMMATRIX mat = rotateMatZ * rotateMatX* rotateMatY;
 			XMMATRIX matR = XMMatrixScaling(1.0, 1.0, 1.0);
+			XMMATRIX matT = XMMatrixTranslation(0.0f,0, 0);
 			//pDice->Draw(mat);
-			pSprite->Draw(matR);
+			pSprite->Draw(matT);
 
 			//•`‰æˆ—
 			Direct3D::EndDraw();

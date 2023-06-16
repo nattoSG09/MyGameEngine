@@ -1,14 +1,10 @@
 //インクルード
-#include <DirectXTex.h>
 #include "Texture.h"
 #include"Direct3D.h"
 
-//リンカ
-#pragma comment( lib, "DirectxTex.lib" )
-
 //コンストラクタ
 Texture::Texture()
-	:pSampler_(nullptr),pSRV_(nullptr)
+	:pSampler_(nullptr),pSRV_(nullptr), metadata_()
 {
 }
 
@@ -21,7 +17,7 @@ Texture::~Texture()
 //テクスチャデータをロード
 HRESULT Texture::Load(std::string fileName)
 {
-	using namespace DirectX;
+	
 	//////////画像読み込み部分(変更)//////////
 
 	//マルチバイト文字→ワイド文字へ変換
@@ -29,11 +25,12 @@ HRESULT Texture::Load(std::string fileName)
 	size_t ret;
 	mbstowcs_s(&ret, wtext, fileName.c_str(), fileName.length());
 
-	TexMetadata metadata;
+	
 	ScratchImage image;
 	HRESULT hr;
-	hr = LoadFromWICFile(wtext, WIC_FLAGS::WIC_FLAGS_NONE, &metadata, image);
+	hr = LoadFromWICFile(wtext, WIC_FLAGS::WIC_FLAGS_NONE, &metadata_, image);
 
+	float a = metadata_.width;
 	if (FAILED(hr)) { 
 		MessageBox(nullptr, "画像の読み込みに失敗しました", "エラー", MB_OK);
 		return E_FAIL; 
@@ -58,7 +55,7 @@ HRESULT Texture::Load(std::string fileName)
 	srv.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
 	srv.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
 	srv.Texture2D.MipLevels = 1;
-	hr = CreateShaderResourceView(Direct3D::pDevice_, image.GetImages(), image.GetImageCount(), metadata, &pSRV_);
+	hr = CreateShaderResourceView(Direct3D::pDevice_, image.GetImages(), image.GetImageCount(), metadata_, &pSRV_);
 	if (FAILED(hr)) {
 		MessageBox(nullptr, "シェーダ―リソースビューの作成に失敗しました", "エラー", MB_OK);
 		return E_FAIL;

@@ -1,6 +1,9 @@
 #include "Sprite.h"
 #include "Texture.h"
 
+
+//画像サイズ	512*256
+
 Sprite::Sprite()
 	:veritices_(),index_()
 	,pVertexBuffer_(nullptr), pTexture_(nullptr), pIndexBuffer_(nullptr), pConstantBuffer_(nullptr)
@@ -12,10 +15,20 @@ Sprite::~Sprite()
 	Release();
 }
 
-HRESULT Sprite::Initialize()
+HRESULT Sprite::Initialize(int winW, int winH)
 {
 	HRESULT hr = S_OK;
 	
+	//テクスチャをロード
+	hr = LoadTexture();
+	if (FAILED(hr)) {return hr;
+	}
+	//頂点情報を設定
+	InitVertexData(winW, winH);
+
+	//インデックス情報を設定
+	InitIndexData();
+
 	//頂点バッファを作成(コンパイル)
 	hr = CreateVertexBuffer();
 	if (FAILED(hr)) {return hr;
@@ -26,10 +39,6 @@ HRESULT Sprite::Initialize()
 	if (FAILED(hr)) {return hr;
 	}
 
-	//テクスチャをロード
-	hr = LoadTexture();
-	if (FAILED(hr)) {return hr;
-	}
 
 	//コンスタントバッファを作成(コンパイル)
 	hr = CreateConstantBuffer();
@@ -57,20 +66,30 @@ void Sprite::Release()
 
 }
 
-void Sprite::InitVertexData()
+void Sprite::InitVertexData(int winW, int winH)
 {
+#if 0
 	veritices_ = {
 	{ XMVectorSet(-1.0f,  1.0f, 0.0f, 0.0f),XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f) },
 	{ XMVectorSet(1.0f,  1.0f, 0.0f, 0.0f),XMVectorSet(1.0f, 0.0f, 0.0f, 0.0f) },
 	{ XMVectorSet(1.0f, -1.0f, 0.0f, 0.0f),XMVectorSet(1.0f, 1.0f, 0.0f, 0.0f) },
 	{ XMVectorSet(-1.0f, -1.0f, 0.0f, 0.0f),XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f) }
 	};
+#else
+	veritices_ = {
+	{ XMVectorSet(-((float)image_.width / 2) / winW, ((float)image_.height / 2) / winH, 0.0f, 0.0f),XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f)},
+	{ XMVectorSet( ((float)image_.width / 2) / winW, ((float)image_.height / 2) / winH, 0.0f, 0.0f),XMVectorSet(1.0f, 0.0f, 0.0f, 0.0f) },
+	{ XMVectorSet( ((float)image_.width / 2) / winW,-((float)image_.height / 2) / winH, 0.0f, 0.0f),XMVectorSet(1.0f, 1.0f, 0.0f, 0.0f) },
+	{ XMVectorSet(-((float)image_.width / 2) / winW,-((float)image_.height / 2) / winH, 0.0f, 0.0f),XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f) }
+	};
+
+	//頂点位置 = (画像サイズ(横)/2) /ウィンドウサイズ
+#endif
 }
 
 HRESULT Sprite::CreateVertexBuffer()
 {
-	//頂点情報を設定
-	InitVertexData();
+	
 
 	D3D11_BUFFER_DESC bd_vertex;
 
@@ -100,8 +119,7 @@ void Sprite::InitIndexData()
 
 HRESULT Sprite::CreateIndexBuffer()
 {
-	//インデックス情報を設定
-	InitIndexData();
+	
 
 	D3D11_BUFFER_DESC   bd;
 	bd.Usage = D3D11_USAGE_DEFAULT;
@@ -145,10 +163,11 @@ HRESULT Sprite::LoadTexture()
 	pTexture_ = new Texture;
 	HRESULT hr =pTexture_->Load("Assets\\Dice.png");
 	if (FAILED(hr)) {
-
 		return hr;//エラー時の戻り値
 	}
+	image_ = pTexture_->GetMetaData();
 	return S_OK;
+
 }
 
 void Sprite::PassDataToCB(XMMATRIX& worldMatrix)
