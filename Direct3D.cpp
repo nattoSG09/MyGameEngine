@@ -135,7 +135,7 @@ HRESULT Direct3D::InitShader(string _hlslFileName)
 		return hr;
 	}
 
-
+	//インプットレイアウトデータを作成
 	hr = D3DCreateInputLayout(_hlslFileName, pCompileVS);
 	if (FAILED(hr)) {
 		MessageBox(nullptr, "頂点インプットレイアウトに失敗しました", "エラー", MB_OK);
@@ -206,6 +206,7 @@ void Direct3D::Release()
 
 }
 
+//インプットレイアウトデータを作成
 HRESULT Direct3D::D3DCreateInputLayout(string _hlslFileName, ID3DBlob* pCompileVS)
 {
 	HRESULT hr;

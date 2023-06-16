@@ -36,6 +36,6 @@ namespace Direct3D
 	//解放
 	void Release();
 
-	//インプットレイアウトデータをセット
+	//インプットレイアウトデータを作成
 	HRESULT D3DCreateInputLayout(string _hlslFileName, ID3DBlob* pCompileVS);
 };

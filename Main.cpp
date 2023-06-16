@@ -104,11 +104,12 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 			//ƒQ[ƒ€‚Ìˆ—
 			Direct3D::BeginDraw();
 
-			static float angle = 0;angle += 0.01f;
+			static float angle = 0;angle += 0.1f;
 			XMMATRIX rotateMatY = XMMatrixRotationY(XMConvertToRadians(angle));
 			XMMATRIX rotateMatX = XMMatrixRotationX(XMConvertToRadians(angle));
 			XMMATRIX rotateMatZ = XMMatrixRotationZ(XMConvertToRadians(angle));
-			XMMATRIX mat = rotateMatY * rotateMatX * rotateMatZ;
+			//XMMATRIX matS = XMMatrixScaling(angle, angle, angle);
+			XMMATRIX mat = rotateMatZ * rotateMatX* rotateMatY;
 			pDice->Draw(mat);
 
 			//•`‰æˆ—
