@@ -1,7 +1,8 @@
 //インクルード
 #include <Windows.h>
 #include "Direct3D.h"
-#include "Dice.h"
+#include "Sprite.h"
+//#include "Dice.h"
 #include "Camera.h"
 
 //定数宣言
@@ -72,11 +73,15 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 	//hr = pQuad->Initialize();
 
 	//DIceを作成
-	Dice* pDice = new Dice;
-	hr = pDice->Initialize();
+	/*Dice* pDice = new Dice;
+	hr = pDice->Initialize();*/
+
+	//Spriteを作成
+	Sprite* pSprite = new Sprite;
+	hr = pSprite->Initialize();
 
 	if (FAILED(hr)) {
-		MessageBox(nullptr, "Diceの初期化に失敗しました", "エラー", MB_OK);
+		MessageBox(nullptr, "Spriteの初期化に失敗しました", "エラー", MB_OK);
 		PostQuitMessage(0);
 	}
 
@@ -105,12 +110,14 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 			Direct3D::BeginDraw();
 
 			static float angle = 0;angle += 0.1f;
-			XMMATRIX rotateMatY = XMMatrixRotationY(XMConvertToRadians(angle));
+			XMMATRIX rotateMatY = XMMatrixRotationY(XMConvertToRadians(0));
 			XMMATRIX rotateMatX = XMMatrixRotationX(XMConvertToRadians(angle));
 			XMMATRIX rotateMatZ = XMMatrixRotationZ(XMConvertToRadians(angle));
+			XMMATRIX matR = XMMatrixScaling(2.0, 2.0, 1.0);
 			//XMMATRIX matS = XMMatrixScaling(angle, angle, angle);
-			XMMATRIX mat = rotateMatZ * rotateMatX* rotateMatY;
-			pDice->Draw(mat);
+			XMMATRIX mat = rotateMatZ * rotateMatX* rotateMatY*matR;
+			//pDice->Draw(mat);
+			pSprite->Draw(mat);
 
 			//描画処理
 			Direct3D::EndDraw();
@@ -119,7 +126,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 
 	//解放処理
 	Direct3D::Release();
-	SAFE_DELETE(pDice);
+	SAFE_DELETE(pSprite);
 
 	return 0;
 }

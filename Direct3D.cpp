@@ -4,6 +4,7 @@
 #include <unordered_map>
 #include "Direct3D.h"
 #include <functional>
+#include <vector>
 
 //using宣言
 using namespace DirectX;
@@ -106,7 +107,7 @@ HRESULT Direct3D::Initialize(int winW, int winH, HWND hWnd)
 	pContext_->RSSetViewports(1, &vp);
 
 	//シェーダー準備
-	hr = InitShader("Simple3D.hlsl");
+	hr = InitShader("Simple2D.hlsl");
 	if (FAILED(hr)) {
 		MessageBox(nullptr, "シェーダーの準備に失敗しました", "エラー", MB_OK);
 		return hr;
@@ -124,7 +125,7 @@ HRESULT Direct3D::InitShader(string _hlslFileName)
 	size_t ret;
 	mbstowcs_s(&ret, wtext, _hlslFileName.c_str(), _hlslFileName.length());
 
-	// 頂点シェーダの作成（コンパイル）
+	//// 頂点シェーダの作成（コンパイル）
 	ID3DBlob* pCompileVS = nullptr;
 	D3DCompileFromFile(wtext, nullptr, nullptr, "VS", "vs_5_0", NULL, 0, &pCompileVS, NULL);
 	assert(pCompileVS != nullptr);
@@ -164,6 +165,8 @@ HRESULT Direct3D::InitShader(string _hlslFileName)
 		MessageBox(nullptr, "ラスタライザの作成に失敗しました", "エラー", MB_OK);
 		return hr;
 	}
+
+
 	//それぞれをデバイスコンテキストにセット
 	pContext_->VSSetShader(pVertexShader_, NULL, 0);	//頂点シェーダー
 	pContext_->PSSetShader(pPixelShader_, NULL, 0);	//ピクセルシェーダー
@@ -213,16 +216,22 @@ HRESULT Direct3D::D3DCreateInputLayout(string _hlslFileName, ID3DBlob* pCompileV
 
 	if (_hlslFileName == "Simple3D.hlsl") {
 
-		D3D11_INPUT_ELEMENT_DESC layout[] = {
+		std::vector<D3D11_INPUT_ELEMENT_DESC> layout = {
 		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0,  D3D11_INPUT_PER_VERTEX_DATA, 0 },	//位置
 		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, sizeof(XMVECTOR) , D3D11_INPUT_PER_VERTEX_DATA, 0 },//UV座標
 		{ "NORMAL",	0, DXGI_FORMAT_R32G32B32_FLOAT, 0, sizeof(XMVECTOR) * 2 ,	D3D11_INPUT_PER_VERTEX_DATA, 0 },//法線
 		};
-		hr = pDevice_->CreateInputLayout(layout, 3, pCompileVS->GetBufferPointer(), pCompileVS->GetBufferSize(), &pVertexLayout_);
+		hr = pDevice_->CreateInputLayout(layout.data(),layout.size(), pCompileVS->GetBufferPointer(), pCompileVS->GetBufferSize(), &pVertexLayout_);
 		return hr;
 	}
-	else if (_hlslFileName == "") {
+	else if (_hlslFileName == "Simple2D.hlsl") {
 
+		std::vector<D3D11_INPUT_ELEMENT_DESC> layout = {
+		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0,  D3D11_INPUT_PER_VERTEX_DATA, 0 },	//位置
+		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, sizeof(XMVECTOR) , D3D11_INPUT_PER_VERTEX_DATA, 0 },//UV座標
+		};
+		hr = pDevice_->CreateInputLayout(layout.data(), layout.size(), pCompileVS->GetBufferPointer(), pCompileVS->GetBufferSize(), &pVertexLayout_);
+		return hr;
 	}
 	else {
 		return E_FAIL;

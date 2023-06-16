@@ -60,6 +60,7 @@ public:
 	//バッファを設定
 	void SetBuffers(XMMATRIX& worldMatrix);
 
+private:
 	//頂点データ用のバッファを作成
 	//引数１：頂点情報	引数２：頂点数
 	HRESULT CreateVertexBuffer(VERTEX* _ver,int _n);
@@ -68,7 +69,7 @@ public:
 	//引数１：インデックス情報	引数２　インデックス数
 	HRESULT CreateIndexBuffer(int* _index, int _n);
 
-	//コンスタントバッファを作成す
+	//コンスタントバッファを作成
 	//引数：　画像データ
 	HRESULT CreateConstantBuffer(string _imageData);
 };
