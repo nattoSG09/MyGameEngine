@@ -2,7 +2,8 @@
 #include "Texture.h"
 
 Sprite::Sprite()
-	:pVertexBuffer_(nullptr), pTexture_(nullptr), pIndexBuffer_(nullptr), pConstantBuffer_(nullptr)
+	:veritices_(),index_()
+	,pVertexBuffer_(nullptr), pTexture_(nullptr), pIndexBuffer_(nullptr), pConstantBuffer_(nullptr)
 {
 }
 
@@ -55,7 +56,6 @@ void Sprite::Release()
 	SAFE_RELEASE(pVertexBuffer_);
 
 }
-
 
 void Sprite::InitVertexData()
 {
