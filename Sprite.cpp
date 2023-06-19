@@ -66,16 +66,17 @@ void Sprite::Release()
 
 }
 
+struct Vertex4
+{
+};
+
 void Sprite::InitVertexData(int winW, int winH)
 {
-#if 0
-	veritices_ = {
-	{ XMVectorSet(-1.0f,  1.0f, 0.0f, 0.0f),XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f) },
-	{ XMVectorSet(1.0f,  1.0f, 0.0f, 0.0f),XMVectorSet(1.0f, 0.0f, 0.0f, 0.0f) },
-	{ XMVectorSet(1.0f, -1.0f, 0.0f, 0.0f),XMVectorSet(1.0f, 1.0f, 0.0f, 0.0f) },
-	{ XMVectorSet(-1.0f, -1.0f, 0.0f, 0.0f),XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f) }
-	};
-#else
+	//画像の位置座標(中心)
+	XMFLOAT3 Position = {0,0,0};
+	
+	
+
 	veritices_ = {
 	{ XMVectorSet(-((float)image_.width / 2) / winW, ((float)image_.height / 2) / winH, 0.0f, 0.0f),XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f)},
 	{ XMVectorSet( ((float)image_.width / 2) / winW, ((float)image_.height / 2) / winH, 0.0f, 0.0f),XMVectorSet(1.0f, 0.0f, 0.0f, 0.0f) },
@@ -84,12 +85,10 @@ void Sprite::InitVertexData(int winW, int winH)
 	};
 
 	//頂点位置 = (画像サイズ(横)/2) /ウィンドウサイズ
-#endif
 }
 
 HRESULT Sprite::CreateVertexBuffer()
 {
-	
 
 	D3D11_BUFFER_DESC bd_vertex;
 
