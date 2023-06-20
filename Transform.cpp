@@ -27,5 +27,5 @@ void Transform::Calclation()
 XMMATRIX Transform::GetWorldMatrix()
 {
 	Calclation();
-    return matRotate_ * matTranslate_* matScale_;
+    return matRotate_ * matTranslate_ * matScale_;
 }
