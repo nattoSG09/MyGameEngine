@@ -118,7 +118,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 			XMMATRIX mat = rotateMatZ * rotateMatY * rotateMatX;
 
 			Transform diceTrans;
-			diceTrans.position_ = {};
+			diceTrans.position_ = {0,0,0};
 			diceTrans.rotate_.x = angle;
 			diceTrans.rotate_.y = angle;
 			diceTrans.scale_ = { 1,1,1 };
