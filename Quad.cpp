@@ -65,8 +65,6 @@ void Quad::Draw(XMMATRIX& worldMatrix)
 
 	//各バッファ―情報をセット
 	SetBufferToPipeline();
-
-	Direct3D::pContext_->DrawIndexed(index_.size(), 0, 0);
 }
 
 //解放
@@ -199,5 +197,5 @@ void Quad::SetBufferToPipeline()
 	//コンスタントバッファ
 	Direct3D::pContext_->VSSetConstantBuffers(0, 1, &pConstantBuffer_);	//頂点シェーダー用	
 	Direct3D::pContext_->PSSetConstantBuffers(0, 1, &pConstantBuffer_);	//ピクセルシェーダー用
-	
+	Direct3D::pContext_->DrawIndexed(index_.size(), 0, 0);
 }
