@@ -5,7 +5,7 @@
 //画像サイズ	512*256
 
 Sprite::Sprite()
-	:veritices_(),index_()
+	:veritices_(),index_(),image_()
 	,pVertexBuffer_(nullptr), pTexture_(nullptr), pIndexBuffer_(nullptr), pConstantBuffer_(nullptr)
 {
 }
@@ -50,6 +50,10 @@ HRESULT Sprite::Initialize(int winW, int winH)
 
 void Sprite::Draw(XMMATRIX& worldMatrix)
 {
+
+	//シェーダーを切り替える
+	Direct3D::SetShader(SHADER_2D);
+
 	//コンスタントバッファに情報をパス
 	PassDataToCB(worldMatrix);
 	
@@ -66,22 +70,16 @@ void Sprite::Release()
 
 }
 
-struct Vertex4
-{
-};
-
 void Sprite::InitVertexData(int winW, int winH)
 {
 	//画像の位置座標(中心)
 	XMFLOAT3 Position = {0,0,0};
 	
-	
-
 	veritices_ = {
-	{ XMVectorSet(-((float)image_.width / 2) / winW, ((float)image_.height / 2) / winH, 0.0f, 0.0f),XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f)},
-	{ XMVectorSet( ((float)image_.width / 2) / winW, ((float)image_.height / 2) / winH, 0.0f, 0.0f),XMVectorSet(1.0f, 0.0f, 0.0f, 0.0f) },
-	{ XMVectorSet( ((float)image_.width / 2) / winW,-((float)image_.height / 2) / winH, 0.0f, 0.0f),XMVectorSet(1.0f, 1.0f, 0.0f, 0.0f) },
-	{ XMVectorSet(-((float)image_.width / 2) / winW,-((float)image_.height / 2) / winH, 0.0f, 0.0f),XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f) }
+	{ XMVectorSet(-((float)image_.width / 2) / winW, (((float)image_.height / 2) / winH) - 0.5f, 0.0f, 0.0f),XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f)},
+	{ XMVectorSet( ((float)image_.width / 2) / winW, (((float)image_.height / 2) / winH) - 0.5f, 0.0f, 0.0f),XMVectorSet(1.0f, 0.0f, 0.0f, 0.0f) },
+	{ XMVectorSet( ((float)image_.width / 2) / winW,-(((float)image_.height / 2) / winH) - 0.5f, 0.0f, 0.0f),XMVectorSet(1.0f, 1.0f, 0.0f, 0.0f) },
+	{ XMVectorSet(-((float)image_.width / 2) / winW,-(((float)image_.height / 2) / winH) - 0.5f, 0.0f, 0.0f),XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f) }
 	};
 
 	//頂点位置 = (画像サイズ(横)/2) /ウィンドウサイズ
@@ -118,7 +116,6 @@ void Sprite::InitIndexData()
 
 HRESULT Sprite::CreateIndexBuffer()
 {
-	
 
 	D3D11_BUFFER_DESC   bd;
 	bd.Usage = D3D11_USAGE_DEFAULT;

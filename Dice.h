@@ -12,10 +12,7 @@ public:
 	//デストラクタ
 	~Dice();
 
-	//初期化
-	HRESULT Initialize() override;
-
-	//描画
-	void Draw(XMMATRIX& worldMatrix) override;
+	void InitVertexData() override;
+	void InitIndexData() override;
 };
 

@@ -12,12 +12,10 @@ Dice::~Dice()
     Release();
 }
 
-//初期化
-HRESULT Dice::Initialize()
+void Dice::InitVertexData()
 {
 	//頂点情報
-	VERTEX vertices[] =
-	{
+	veritices_ ={
 		//面１
 		{XMVectorSet(-1.0f,  1.0f, -1.0f, 0.0f),XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f) ,XMVectorSet(0.0f,0.0f,-1.0f,0.0f)},	// 前面（左上）0
 		{XMVectorSet(1.0f,  1.0f, -1.0f, 0.0f),XMVectorSet(0.25f, 0.0f, 0.0f, 0.0f) ,XMVectorSet(0.0f,0.0f,-1.0f,0.0f)},	// 前面（右上）1
@@ -54,9 +52,11 @@ HRESULT Dice::Initialize()
 		{XMVectorSet(1.0f, -1.0f, 1.0f, 0.0f),XMVectorSet(0.5f, 0.5f, 0.0f, 0.0f) ,XMVectorSet(0.0f,-1.0f,0.0f,0.0f)},	// 上面（右下）22
 		{XMVectorSet(-1.0f, -1.0f, 1.0f, 0.0f),XMVectorSet(0.25f, 0.5f, 0.0f, 0.0f) ,XMVectorSet(0.0f,-1.0f,0.0f,0.0f)},	// 上面（左下）23
 	};
+}
 
-	//インデックス情報
-	int index[] = {
+void Dice::InitIndexData()
+{
+	index_ = {
 		 0, 2, 3,  0, 1, 2,		//面１
 		 4, 6, 7,  4, 5, 6,		//面４
 		 8,10,11,  8, 9,10,		//面３
@@ -64,18 +64,4 @@ HRESULT Dice::Initialize()
 		16,18,19, 16,17,18,		//面５
 		20,22,23, 20,21,22,		//面２
 	};
-
-	HRESULT hr = CreateBuffers(SET_ARRAY_DATA(vertices), SET_ARRAY_DATA(index), "Assets\\Dice.png");
-	if (FAILED(hr)) {
-		MessageBox(nullptr, "バッファの作成に失敗しました", "エラー", MB_OK);
-		return hr;
-	}
-	return S_OK;
-}
-
-//描画
-void Dice::Draw(XMMATRIX& worldMatrix)
-{
-	Quad::SetBuffers(worldMatrix);
-	Direct3D::pContext_->DrawIndexed(36, 0, 0);
 }

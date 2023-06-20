@@ -3,35 +3,41 @@
 //インクルード
 #include <DirectXMath.h>
 #include <string>
+#include <vector>
+
 #include "Direct3D.h"
 #include "Texture.h"
 
 //using宣言
 using namespace DirectX;
 using std::size;
-
-//置換
-#define SET_ARRAY_DATA(arr) arr,size(arr)
-
-//コンスタントバッファー
-struct CONSTANT_BUFFER
-{
-	XMMATRIX	matWVP;
-	XMMATRIX	matW;
-	XMVECTOR	lightPos;
-};
-
-//頂点情報
-struct VERTEX
-{
-	XMVECTOR position;
-	XMVECTOR uv;
-	XMVECTOR normal;
-};
+using std::string;
+using std::vector;
 
 class Quad
 {
+	//コンスタントバッファー
+	struct CONSTANT_BUFFER
+	{
+		XMMATRIX	matWVP;
+		XMMATRIX	matW;
+		XMVECTOR	lightPos;
+	};
+
+	//頂点情報
+	struct VERTEX
+	{
+		XMVECTOR position;
+		XMVECTOR uv;
+		XMVECTOR normal;
+	};
+
 protected:
+
+
+	vector<VERTEX> veritices_;	//頂点情報(配列)
+	vector<int> index_;	//インデックス情報(配列)
+	
 	ID3D11Buffer* pVertexBuffer_;	//頂点バッファ
 	ID3D11Buffer* pIndexBuffer_;	//インデックスバッファ
 	ID3D11Buffer* pConstantBuffer_;	//コンスタントバッファ
@@ -44,33 +50,29 @@ public:
 	~Quad();
 
 	//初期化
-	virtual HRESULT Initialize();
+	HRESULT Initialize();
 
 	//描画
-	virtual void Draw(XMMATRIX& worldMatrix);
+	void Draw(XMMATRIX& worldMatrix);
 
 	//解放
-	virtual void Release();
-
-	//バッファを作成
-	//引数１：頂点情報	引数２：頂点数
-	//引数３：インデックス情報　	引数４：インデックス数
-	HRESULT CreateBuffers(VERTEX* _ver,int _vn,int* _index,int _in,string _imageData);
-
-	//バッファを設定
-	void SetBuffers(XMMATRIX& worldMatrix);
+	void Release();
 
 private:
-	//頂点データ用のバッファを作成
-	//引数１：頂点情報	引数２：頂点数
-	HRESULT CreateVertexBuffer(VERTEX* _ver,int _n);
+	//ー－－－－－Initializeから呼ばれる関数ー－－－－－
 
-	//インデックスバッファを作成
-	//引数１：インデックス情報	引数２　インデックス数
-	HRESULT CreateIndexBuffer(int* _index, int _n);
+	virtual void InitVertexData();
+	HRESULT CreateVertexBuffer();
 
-	//コンスタントバッファを作成
-	//引数：　画像データ
-	HRESULT CreateConstantBuffer(string _imageData);
+	virtual void InitIndexData();
+	HRESULT CreateIndexBuffer();
+
+	HRESULT CreateConstantBuffer();
+
+	HRESULT LoadTexture();
+
+	//ー－－－－－ーDrawから呼ばれる関数ーー－－－－－
+	void PassDataToCB(XMMATRIX& worldMatrix);
+	void SetBufferToPipeline();
 };
 

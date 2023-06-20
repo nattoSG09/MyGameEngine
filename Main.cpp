@@ -2,7 +2,7 @@
 #include <Windows.h>
 #include "Direct3D.h"
 #include "Sprite.h"
-//#include "Dice.h"
+#include "Dice.h"
 #include "Camera.h"
 
 //’è”éŒ¾
@@ -69,16 +69,16 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 	}
 
 	//Quad‚ğì¬
-	//Quad* pQuad = new Quad;
-	//hr = pQuad->Initialize();
-
-	//DIce‚ğì¬
-	/*Dice* pDice = new Dice;
-	hr = pDice->Initialize();*/
+	Quad* pQuad = new Quad;
+	hr = pQuad->Initialize();
 
 	//Sprite‚ğì¬
-	Sprite* pSprite = new Sprite;
-	hr = pSprite->Initialize(winW,winH);
+	/*Sprite* pSprite = new Sprite;
+	hr = pSprite->Initialize(winW,winH);*/
+
+	//DIce‚ğì¬
+	Dice* pDice = new Dice;
+	hr = pDice->Initialize();
 
 	if (FAILED(hr)) {
 		MessageBox(nullptr, "Sprite‚Ì‰Šú‰»‚É¸”s‚µ‚Ü‚µ‚½", "ƒGƒ‰[", MB_OK);
@@ -109,15 +109,16 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 			//ƒQ[ƒ€‚Ìˆ—
 			Direct3D::BeginDraw();
 
-			static float angle = 0;angle += 1.0f;
+			static float angle = 0;angle += 0.1f;
 			XMMATRIX rotateMatY = XMMatrixRotationY(XMConvertToRadians(0));
 			XMMATRIX rotateMatX = XMMatrixRotationX(XMConvertToRadians(angle));
 			XMMATRIX rotateMatZ = XMMatrixRotationZ(XMConvertToRadians(angle));
-			XMMATRIX mat = rotateMatZ * rotateMatX* rotateMatY;
 			XMMATRIX matR = XMMatrixScaling(1.0, 1.0, 1.0);
-			XMMATRIX matT = XMMatrixTranslation(0.0f,0, 0);
-			//pDice->Draw(mat);
-			pSprite->Draw(matT);
+			XMMATRIX matT = XMMatrixTranslation(0,0,0);
+			XMMATRIX mat = rotateMatZ * rotateMatY * rotateMatX;
+			pDice->Draw(mat);
+			pQuad->Draw(matT);
+			//pSprite->Draw(matT);
 
 			//•`‰æˆ—
 			Direct3D::EndDraw();
@@ -125,8 +126,10 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 	}
 
 	//‰ğ•úˆ—
+	//SAFE_DELETE(pSprite);
 	Direct3D::Release();
-	SAFE_DELETE(pSprite);
+	SAFE_DELETE(pDice);
+	SAFE_DELETE(pQuad);
 
 	return 0;
 }

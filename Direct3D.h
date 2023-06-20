@@ -16,16 +16,27 @@ using std::string;
 #define SAFE_DELETE(p) if(p != nullptr){ delete p; p = nullptr;}
 #define SAFE_RELEASE(p) if(p != nullptr){ p->Release(); p = nullptr;}
 
+enum SHADER_TYPE {
+	SHADER_2D,
+	SHADER_3D,
+	SHADER_MAX,
+};
+
 namespace Direct3D
 {
 	extern ID3D11Device* pDevice_;			//デバイス
 	extern 	ID3D11DeviceContext* pContext_;	//デバイスコンテキスト
 
+
 	//初期化
 	HRESULT Initialize(int winW, int winH, HWND hWnd);
 
 	//シェーダー準備
-	HRESULT InitShader(string _hlslFileName);
+	HRESULT InitShader();
+	HRESULT InitShader3D();
+	HRESULT InitShader2D();
+
+	void SetShader(SHADER_TYPE _type);
 
 	//描画開始
 	void BeginDraw();
@@ -36,6 +47,4 @@ namespace Direct3D
 	//解放
 	void Release();
 
-	//インプットレイアウトデータを作成
-	HRESULT D3DCreateInputLayout(string _hlslFileName, ID3DBlob* pCompileVS);
 };

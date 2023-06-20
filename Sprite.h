@@ -25,8 +25,6 @@ class Sprite
 	};
 
 protected:
-
-
 	vector<VERTEX> veritices_;	//’¸“_î•ñ(”z—ñ)
 	vector<int> index_;	//ƒCƒ“ƒfƒbƒNƒXî•ñ(”z—ñ)
 	TexMetadata image_;	//‰æ‘œî•ñ
@@ -41,13 +39,13 @@ public:
 	~Sprite();
 
 	//‰Šú‰»
-	virtual HRESULT Initialize(int winW,int winH);
+	HRESULT Initialize(int winW,int winH);
 
 	//•`‰æ
-	virtual void Draw(XMMATRIX& worldMatrix);
+	void Draw(XMMATRIX& worldMatrix);
 
 	//‰ğ•ú
-	virtual void Release();
+	void Release();
 
 private:
 	//[|||||Initialize‚©‚çŒÄ‚Î‚ê‚éŠÖ”[|||||
