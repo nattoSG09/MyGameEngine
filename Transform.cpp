@@ -11,21 +11,21 @@ Transform::~Transform()
 
 void Transform::Calclation()
 {
-    //移動行列
+    //変形：移動
     matTranslate_ = XMMatrixTranslation(position_.x, position_.y, position_.z);
 
-	//回転行列
+	//変形：回転
 	XMMATRIX rotateX = XMMatrixRotationX(XMConvertToRadians(rotate_.x));
 	XMMATRIX rotateY = XMMatrixRotationY(XMConvertToRadians(rotate_.y));
 	XMMATRIX rotateZ = XMMatrixRotationZ(XMConvertToRadians(rotate_.z));
 	matRotate_ = rotateZ * rotateX * rotateY;
 
-	//拡大縮小
+	//変形：拡大縮小
 	matScale_ = XMMatrixScaling(scale_.x, scale_.y, scale_.z);
 }
 
 XMMATRIX Transform::GetWorldMatrix()
 {
 	Calclation();
-    return matTranslate_ * matRotate_ * matScale_;
+    return matRotate_ * matTranslate_* matScale_;
 }

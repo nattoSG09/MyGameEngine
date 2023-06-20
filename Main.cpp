@@ -118,12 +118,13 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 			XMMATRIX mat = rotateMatZ * rotateMatY * rotateMatX;
 
 			Transform diceTrans;
-			diceTrans.position_ = {0,0,0};
+			diceTrans.position_ = {1,0,0};
 			diceTrans.rotate_.x = angle;
 			diceTrans.rotate_.y = angle;
 			diceTrans.scale_ = { 1,1,1 };
 			pDice->Draw(diceTrans);
 			//pQuad->Draw(rotateMatY);
+
 			Transform spriteTrans;
 			spriteTrans.position_ = { 0,-0.7,0 };
 			pSprite->Draw(spriteTrans);
