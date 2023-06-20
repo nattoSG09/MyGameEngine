@@ -54,14 +54,15 @@ HRESULT Quad::Initialize()
 }
 
 //描画
-void Quad::Draw(XMMATRIX& worldMatrix)
+void Quad::Draw(Transform _transform)
 {
+	
 
 	//シェーダーを切り替える
 	Direct3D::SetShader(SHADER_3D);
 
 	//コンスタントバッファに情報をパス
-	PassDataToCB(worldMatrix);
+	PassDataToCB(_transform);
 
 	//各バッファ―情報をセット
 	SetBufferToPipeline();
@@ -164,11 +165,13 @@ HRESULT Quad::LoadTexture()
 	return S_OK;
 }
 
-void Quad::PassDataToCB(XMMATRIX& worldMatrix)
+void Quad::PassDataToCB(Transform _transform)
 {
 	//コンスタントバッファをセット
 	CONSTANT_BUFFER cb;
-	cb.matW = XMMatrixTranspose(worldMatrix);
+	cb.matWVP = XMMatrixTranspose(_transform.GetWorldMatrix() * Camera::GetViewMatrix() * Camera::GetProjectionMatrix());
+	cb.matW = XMMatrixTranspose(_transform.GetWorldMatrix());
+	cb.lightPos = XMVectorSet(-0.7f, 0.5f, -0.7f, 0.0f);
 
 	D3D11_MAPPED_SUBRESOURCE pdata;
 	Direct3D::pContext_->Map(pConstantBuffer_, 0, D3D11_MAP_WRITE_DISCARD, 0, &pdata);	// GPUからのデータアクセスを止める

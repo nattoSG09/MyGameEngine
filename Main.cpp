@@ -69,16 +69,16 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 	}
 
 	//Quad‚ğì¬
-	Quad* pQuad = new Quad;
-	hr = pQuad->Initialize();
-
-	//Sprite‚ğì¬
-	/*Sprite* pSprite = new Sprite;
-	hr = pSprite->Initialize(winW,winH);*/
+	/*Quad* pQuad = new Quad;
+	hr = pQuad->Initialize();*/
 
 	//DIce‚ğì¬
 	Dice* pDice = new Dice;
 	hr = pDice->Initialize();
+
+	//Sprite‚ğì¬
+	Sprite* pSprite = new Sprite;
+	hr = pSprite->Initialize(winW,winH);
 
 	if (FAILED(hr)) {
 		MessageBox(nullptr, "Sprite‚Ì‰Šú‰»‚É¸”s‚µ‚Ü‚µ‚½", "ƒGƒ‰[", MB_OK);
@@ -110,15 +110,23 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 			Direct3D::BeginDraw();
 
 			static float angle = 0;angle += 0.1f;
-			XMMATRIX rotateMatY = XMMatrixRotationY(XMConvertToRadians(0));
+			XMMATRIX rotateMatY = XMMatrixRotationY(XMConvertToRadians(angle));
 			XMMATRIX rotateMatX = XMMatrixRotationX(XMConvertToRadians(angle));
 			XMMATRIX rotateMatZ = XMMatrixRotationZ(XMConvertToRadians(angle));
 			XMMATRIX matR = XMMatrixScaling(1.0, 1.0, 1.0);
-			XMMATRIX matT = XMMatrixTranslation(0,0,0);
+			XMMATRIX matT = XMMatrixTranslation(0,-0.7f,0);
 			XMMATRIX mat = rotateMatZ * rotateMatY * rotateMatX;
-			pDice->Draw(mat);
-			pQuad->Draw(matT);
-			//pSprite->Draw(matT);
+
+			Transform diceTrans;
+			diceTrans.position_ = {};
+			diceTrans.rotate_.x = angle;
+			diceTrans.rotate_.y = angle;
+			diceTrans.scale_ = { 1,1,1 };
+			pDice->Draw(diceTrans);
+			//pQuad->Draw(rotateMatY);
+			Transform spriteTrans;
+			spriteTrans.position_ = { 0,-0.7,0 };
+			pSprite->Draw(spriteTrans);
 
 			//•`‰æˆ—
 			Direct3D::EndDraw();
@@ -128,8 +136,9 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 	//‰ğ•úˆ—
 	//SAFE_DELETE(pSprite);
 	Direct3D::Release();
+	//SAFE_DELETE(pQuad);
 	SAFE_DELETE(pDice);
-	SAFE_DELETE(pQuad);
+	SAFE_DELETE(pSprite);
 
 	return 0;
 }

@@ -1,6 +1,7 @@
 #pragma once
 #include "Direct3D.h"
 #include "Texture.h"
+#include "Transform.h"
 #include <DirectXMath.h>
 #include <vector>
 #include <string>
@@ -42,7 +43,7 @@ public:
 	HRESULT Initialize(int winW,int winH);
 
 	//•`‰æ
-	void Draw(XMMATRIX& worldMatrix);
+	void Draw(Transform _transform);
 
 	//‰ğ•ú
 	void Release();
@@ -61,7 +62,7 @@ private:
 	HRESULT LoadTexture();
 
 	//[|||||[Draw‚©‚çŒÄ‚Î‚ê‚éŠÖ”[[|||||
-	void PassDataToCB(XMMATRIX& worldMatrix);
+	void PassDataToCB(Transform _transform);
 	void SetBufferToPipeline();
 
 

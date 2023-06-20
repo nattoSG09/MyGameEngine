@@ -48,14 +48,14 @@ HRESULT Sprite::Initialize(int winW, int winH)
 	return S_OK;
 }
 
-void Sprite::Draw(XMMATRIX& worldMatrix)
+void Sprite::Draw(Transform _transform)
 {
 
 	//シェーダーを切り替える
 	Direct3D::SetShader(SHADER_2D);
 
 	//コンスタントバッファに情報をパス
-	PassDataToCB(worldMatrix);
+	PassDataToCB(_transform);
 	
 	//各バッファ―情報をセット
 	SetBufferToPipeline();
@@ -76,10 +76,10 @@ void Sprite::InitVertexData(int winW, int winH)
 	XMFLOAT3 Position = {0,0,0};
 	
 	veritices_ = {
-	{ XMVectorSet(-((float)image_.width / 2) / winW, (((float)image_.height / 2) / winH) - 0.5f, 0.0f, 0.0f),XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f)},
-	{ XMVectorSet( ((float)image_.width / 2) / winW, (((float)image_.height / 2) / winH) - 0.5f, 0.0f, 0.0f),XMVectorSet(1.0f, 0.0f, 0.0f, 0.0f) },
-	{ XMVectorSet( ((float)image_.width / 2) / winW,-(((float)image_.height / 2) / winH) - 0.5f, 0.0f, 0.0f),XMVectorSet(1.0f, 1.0f, 0.0f, 0.0f) },
-	{ XMVectorSet(-((float)image_.width / 2) / winW,-(((float)image_.height / 2) / winH) - 0.5f, 0.0f, 0.0f),XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f) }
+	{ XMVectorSet(-((float)image_.width / 2) / winW, (((float)image_.height / 2) / winH), 0.0f, 0.0f),XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f)},
+	{ XMVectorSet( ((float)image_.width / 2) / winW, (((float)image_.height / 2) / winH), 0.0f, 0.0f),XMVectorSet(1.0f, 0.0f, 0.0f, 0.0f) },
+	{ XMVectorSet( ((float)image_.width / 2) / winW,-(((float)image_.height / 2) / winH), 0.0f, 0.0f),XMVectorSet(1.0f, 1.0f, 0.0f, 0.0f) },
+	{ XMVectorSet(-((float)image_.width / 2) / winW,-(((float)image_.height / 2) / winH), 0.0f, 0.0f),XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f) }
 	};
 
 	//頂点位置 = (画像サイズ(横)/2) /ウィンドウサイズ
@@ -166,11 +166,11 @@ HRESULT Sprite::LoadTexture()
 
 }
 
-void Sprite::PassDataToCB(XMMATRIX& worldMatrix)
+void Sprite::PassDataToCB(Transform _transform)
 {
 	//コンスタントバッファをセット
 	CONSTANT_BUFFER cb;
-	cb.matW = XMMatrixTranspose(worldMatrix);
+	cb.matW = XMMatrixTranspose(_transform.GetWorldMatrix());
 
 	D3D11_MAPPED_SUBRESOURCE pdata;
 	Direct3D::pContext_->Map(pConstantBuffer_, 0, D3D11_MAP_WRITE_DISCARD, 0, &pdata);	// GPUからのデータアクセスを止める

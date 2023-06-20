@@ -7,6 +7,7 @@
 
 #include "Direct3D.h"
 #include "Texture.h"
+#include "Transform.h"
 
 //usingéŒ¾
 using namespace DirectX;
@@ -53,7 +54,7 @@ public:
 	HRESULT Initialize();
 
 	//•`‰æ
-	void Draw(XMMATRIX& worldMatrix);
+	void Draw(Transform _transform);
 
 	//‰ğ•ú
 	void Release();
@@ -72,7 +73,7 @@ private:
 	HRESULT LoadTexture();
 
 	//[|||||[Draw‚©‚çŒÄ‚Î‚ê‚éŠÖ”[[|||||
-	void PassDataToCB(XMMATRIX& worldMatrix);
+	void PassDataToCB(Transform _transform);
 	void SetBufferToPipeline();
 };
 
