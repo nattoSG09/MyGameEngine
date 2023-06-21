@@ -117,8 +117,10 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 			XMMATRIX matT = XMMatrixTranslation(0,-0.7f,0);
 			XMMATRIX mat = rotateMatZ * rotateMatY * rotateMatX;
 
+			static float spped = 5; spped -= 0.001;
+
 			Transform diceTrans;
-			diceTrans.position_ = {1,0,0};
+			diceTrans.position_ = {0,1,spped };
 			diceTrans.rotate_.x = angle;
 			diceTrans.rotate_.y = angle;
 			diceTrans.scale_ = { 1,1,1 };
@@ -128,6 +130,8 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 			Transform spriteTrans;
 			spriteTrans.position_ = { 0,-0.7,0 };
 			pSprite->Draw(spriteTrans);
+
+			Camera::SetTarget(diceTrans.position_);
 
 			//•`‰æˆ—
 			Direct3D::EndDraw();
