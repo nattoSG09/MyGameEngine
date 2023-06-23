@@ -36,6 +36,7 @@ namespace Direct3D
 	HRESULT InitShader3D();
 	HRESULT InitShader2D();
 
+	//使用するシェーダーを選択
 	void SetShader(SHADER_TYPE _type);
 
 	//描画開始

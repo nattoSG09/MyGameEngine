@@ -11,7 +11,7 @@ SamplerState	g_sampler : register(s0);	//サンプラー
 cbuffer global
 {
 	float4x4	matWVP;		// ワールド・ビュー・プロジェクションの合成行列
-	float4x4	matW;		// ワールド行列
+	float4x4	matNormal;		// ワールド行列
 	float4		lightPos;		//光の位置
 };
 
@@ -41,7 +41,7 @@ VS_OUT VS(float4 pos : POSITION,float4 uv : TEXCOORD, float4 normal : NORMAL)
 	outData.uv = uv;
 
 	//法線を回転
-	normal = mul(normal,matW);
+	normal = mul(normal, matNormal);
 
 	//輝度情報をピクセルシェーダ―へ
 	float4 light = lightPos;

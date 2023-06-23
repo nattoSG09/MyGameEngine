@@ -29,3 +29,8 @@ XMMATRIX Transform::GetWorldMatrix()
 	Calclation();
     return matRotate_ * matTranslate_ * matScale_;
 }
+
+XMMATRIX Transform::GetNormalMatrix()
+{
+	return matRotate_ * XMMatrixInverse(nullptr, matScale_);
+}

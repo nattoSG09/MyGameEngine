@@ -170,7 +170,7 @@ void Quad::PassDataToCB(Transform _transform)
 	//コンスタントバッファをセット
 	CONSTANT_BUFFER cb;
 	cb.matWVP = XMMatrixTranspose(_transform.GetWorldMatrix() * Camera::GetViewMatrix() * Camera::GetProjectionMatrix());
-	cb.matW = XMMatrixTranspose(_transform.GetWorldMatrix());
+	cb.matNormal = XMMatrixTranspose(_transform.GetNormalMatrix());
 	cb.lightPos = XMVectorSet(-0.7f, 0.5f, -0.7f, 0.0f);
 
 	D3D11_MAPPED_SUBRESOURCE pdata;

@@ -4,6 +4,7 @@
 #include "Sprite.h"
 #include "Dice.h"
 #include "Camera.h"
+#include "Fbx.h"
 
 //定数宣言
 const char* WIN_CLASS_NAME = "SampleGame";  //ウィンドウクラス名
@@ -73,12 +74,15 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 	hr = pQuad->Initialize();*/
 
 	//DIceを作成
-	Dice* pDice = new Dice;
-	hr = pDice->Initialize();
+	//Dice* pDice = new Dice;
+	//hr = pDice->Initialize();
 
-	//Spriteを作成
-	Sprite* pSprite = new Sprite;
-	hr = pSprite->Initialize(winW,winH);
+	////Spriteを作成
+	//Sprite* pSprite = new Sprite;
+	//hr = pSprite->Initialize(winW,winH);
+
+	Fbx* pFbx = new Fbx;
+	pFbx->Load("Oden.fbx");
 
 	if (FAILED(hr)) {
 		MessageBox(nullptr, "Spriteの初期化に失敗しました", "エラー", MB_OK);
@@ -109,29 +113,38 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 			//ゲームの処理
 			Direct3D::BeginDraw();
 
-			static float angle = 0;angle += 0.1f;
-			XMMATRIX rotateMatY = XMMatrixRotationY(XMConvertToRadians(angle));
-			XMMATRIX rotateMatX = XMMatrixRotationX(XMConvertToRadians(angle));
-			XMMATRIX rotateMatZ = XMMatrixRotationZ(XMConvertToRadians(angle));
-			XMMATRIX matR = XMMatrixScaling(1.0, 1.0, 1.0);
-			XMMATRIX matT = XMMatrixTranslation(0,-0.7f,0);
-			XMMATRIX mat = rotateMatZ * rotateMatY * rotateMatX;
+			//いろいろ出力
+			#if 0
+			{
+				static float angle = 0; angle += 0.1f;
+				XMMATRIX rotateMatY = XMMatrixRotationY(XMConvertToRadians(angle));
+				XMMATRIX rotateMatX = XMMatrixRotationX(XMConvertToRadians(angle));
+				XMMATRIX rotateMatZ = XMMatrixRotationZ(XMConvertToRadians(angle));
+				XMMATRIX matR = XMMatrixScaling(1.0, 1.0, 1.0);
+				XMMATRIX matT = XMMatrixTranslation(0, -0.7f, 0);
+				XMMATRIX mat = rotateMatZ * rotateMatY * rotateMatX;
 
-			static float spped = 5; spped -= 0.001;
+				static float spped = 5; spped -= 0.001;
 
-			Transform diceTrans;
-			diceTrans.position_ = {0,1,spped };
-			diceTrans.rotate_.x = angle;
-			diceTrans.rotate_.y = angle;
-			diceTrans.scale_ = { 1,1,1 };
-			pDice->Draw(diceTrans);
-			//pQuad->Draw(rotateMatY);
+				Transform diceTrans;
+				diceTrans.position_ = { 0,1,spped };
+				diceTrans.rotate_.x = angle;
+				diceTrans.rotate_.y = angle;
+				diceTrans.scale_ = { 1,1,1 };
+				pDice->Draw(diceTrans);
+				//pQuad->Draw(rotateMatY);
 
-			Transform spriteTrans;
-			spriteTrans.position_ = { 0,-0.7,0 };
-			pSprite->Draw(spriteTrans);
+				Transform spriteTrans;
+				spriteTrans.position_ = { 0,-0.7,0 };
+				pSprite->Draw(spriteTrans);
 
-			Camera::SetTarget(diceTrans.position_);
+				Camera::SetTarget(diceTrans.position_);
+			}
+			#endif
+			
+			Transform t;
+			pFbx->Draw(t);
+
 
 			//描画処理
 			Direct3D::EndDraw();
@@ -142,8 +155,9 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 	//SAFE_DELETE(pSprite);
 	Direct3D::Release();
 	//SAFE_DELETE(pQuad);
-	SAFE_DELETE(pDice);
-	SAFE_DELETE(pSprite);
+	/*SAFE_DELETE(pDice);
+	SAFE_DELETE(pSprite);*/
+	SAFE_DELETE(pFbx);
 
 	return 0;
 }
