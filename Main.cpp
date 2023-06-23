@@ -82,7 +82,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 	//hr = pSprite->Initialize(winW,winH);
 
 	Fbx* pFbx = new Fbx;
-	pFbx->Load("Oden.fbx");
+	pFbx->Load("Assets\\Oden.fbx");
 
 	if (FAILED(hr)) {
 		MessageBox(nullptr, "Sprite‚Ì‰Šú‰»‚ÉŽ¸”s‚µ‚Ü‚µ‚½", "ƒGƒ‰[", MB_OK);
@@ -142,7 +142,9 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 			}
 			#endif
 			
+			static float angle = 0; angle += 0.01;
 			Transform t;
+			t.rotate_.y = angle;
 			pFbx->Draw(t);
 
 
