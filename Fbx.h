@@ -24,7 +24,7 @@ private:
 	//マテリアル
 	struct MATERIAL
 	{
-		Texture* pTexture;
+		Texture* pTexture_;
 	};
 
 	//コンスタントバッファに情報を渡すための構造体
@@ -36,11 +36,12 @@ private:
 	//頂点情報
 	struct VERTEX{
 		XMVECTOR position;
+		XMVECTOR uv;
 	};
 
 	//各バッファ情報
 	ID3D11Buffer* pVertexBuffer_;
-	ID3D11Buffer* pIndexBuffer_;
+	ID3D11Buffer** pIndexBuffer_;
 	ID3D11Buffer* pConstantBuffer_;
 	MATERIAL* pMaterialList_;
 
