@@ -73,19 +73,20 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 	/*Quad* pQuad = new Quad;
 	hr = pQuad->Initialize();*/
 
-	//DIceを作成
-	//Dice* pDice = new Dice;
-	//hr = pDice->Initialize();
+	//DIceを初期化
+	Dice* pDice = new Dice;
+	hr = pDice->Initialize();
 
-	////Spriteを作成
-	//Sprite* pSprite = new Sprite;
-	//hr = pSprite->Initialize(winW,winH);
+	//Spriteを初期化
+	Sprite* pSprite = new Sprite;
+	hr = pSprite->Initialize(winW,winH);
 
+	//fbxを初期化
 	Fbx* pFbx = new Fbx;
-	pFbx->Load("Assets\\Oden.fbx");
+	hr = pFbx->Load("Assets/Oden.fbx");
 
 	if (FAILED(hr)) {
-		MessageBox(nullptr, "Spriteの初期化に失敗しました", "エラー", MB_OK);
+		MessageBox(nullptr, "いずれかのモデルの初期化に失敗しました", "エラー", MB_OK);
 		PostQuitMessage(0);
 	}
 
@@ -114,39 +115,37 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 			Direct3D::BeginDraw();
 
 			//いろいろ出力
+			static float angle = 0; angle += 0.01;
+			
+			//Diceを描画
 			#if 0
 			{
-				static float angle = 0; angle += 0.1f;
-				XMMATRIX rotateMatY = XMMatrixRotationY(XMConvertToRadians(angle));
-				XMMATRIX rotateMatX = XMMatrixRotationX(XMConvertToRadians(angle));
-				XMMATRIX rotateMatZ = XMMatrixRotationZ(XMConvertToRadians(angle));
-				XMMATRIX matR = XMMatrixScaling(1.0, 1.0, 1.0);
-				XMMATRIX matT = XMMatrixTranslation(0, -0.7f, 0);
-				XMMATRIX mat = rotateMatZ * rotateMatY * rotateMatX;
+				Transform t;
+				t.rotate_.x += angle;
+				t.rotate_.y += angle;
+				t.rotate_.z += angle;
+				t.position_ = { -3,0,0 };
+				pDice->Draw(t);
+			}
+			#endif
 
-				static float spped = 5; spped -= 0.001;
-
-				Transform diceTrans;
-				diceTrans.position_ = { 0,1,spped };
-				diceTrans.rotate_.x = angle;
-				diceTrans.rotate_.y = angle;
-				diceTrans.scale_ = { 1,1,1 };
-				pDice->Draw(diceTrans);
-				//pQuad->Draw(rotateMatY);
-
-				Transform spriteTrans;
-				spriteTrans.position_ = { 0,-0.7,0 };
-				pSprite->Draw(spriteTrans);
-
-				Camera::SetTarget(diceTrans.position_);
+			//spriteを描画
+			#if 0
+			{
+				Transform t;
+				t.position_ = { 0,-0.7,0 };
+				pSprite->Draw(t);
 			}
 			#endif
 			
-			static float angle = 0; angle += 0.01;
-			Transform t;
-			t.rotate_.y = angle;
-			pFbx->Draw(t);
-
+			//Oden.fbxを描画
+			#if 1
+			{
+				Transform t;
+				t.rotate_.y = angle;
+				pFbx->Draw(t);
+			}
+			#endif
 
 			//描画処理
 			Direct3D::EndDraw();
@@ -154,11 +153,10 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 	}
 
 	//解放処理
-	//SAFE_DELETE(pSprite);
 	Direct3D::Release();
-	//SAFE_DELETE(pQuad);
-	/*SAFE_DELETE(pDice);
-	SAFE_DELETE(pSprite);*/
+	
+	SAFE_DELETE(pDice);
+	SAFE_DELETE(pSprite);
 	SAFE_DELETE(pFbx);
 
 	return 0;

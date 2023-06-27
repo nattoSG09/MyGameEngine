@@ -1,8 +1,10 @@
 #include "Transform.h"
 
 Transform::Transform():
-	matTranslate_{}, matRotate_{}, matScale_{}, position_{0,0,0}, rotate_{0,0,0}, scale_{1,1,1}
+	matTranslate_(XMMatrixIdentity()), matRotate_(XMMatrixIdentity()), matScale_(XMMatrixIdentity())
+	, position_{0,0,0}, rotate_{0,0,0}, scale_{1,1,1}
 {
+	
 }
 
 Transform::~Transform()
