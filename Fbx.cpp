@@ -6,7 +6,7 @@
 using std::size;
 
 Fbx::Fbx()
-    :vertexCount_(0),polygonCount_(0)
+    :vertexCount_(0),polygonCount_(0), materialCount_(0), pMaterialList_(nullptr)
     ,pVertexBuffer_(nullptr),pIndexBuffer_(nullptr),pConstantBuffer_(nullptr)
 
 {
@@ -74,20 +74,45 @@ void Fbx::Draw(Transform& _transform)
 	CONSTANT_BUFFER cb;
 	cb.matWVP = XMMatrixTranspose(_transform.GetWorldMatrix() * Camera::GetViewMatrix() * Camera::GetProjectionMatrix());
 	cb.matNormal = XMMatrixTranspose(_transform.GetNormalMatrix());
+
+	//ライトの位置
 	cb.lightPos = XMVectorSet(-0.7f, 0.5f, -0.7f, 0.0f);
 
-	D3D11_MAPPED_SUBRESOURCE pdata;
-	Direct3D::pContext_->Map(pConstantBuffer_, 0, D3D11_MAP_WRITE_DISCARD, 0, &pdata);	// GPUからのデータアクセスを止める
-	memcpy_s(pdata.pData, pdata.RowPitch, (void*)(&cb), sizeof(cb));	// データを値を送る
 
-	//頂点バッファ
-	UINT stride = sizeof(VERTEX);
-	UINT offset = 0;
-	Direct3D::pContext_->IASetVertexBuffers(0, 1, &pVertexBuffer_, &stride, &offset);
+	Direct3D::pContext_->Unmap(pConstantBuffer_, 0);
 
-	for (int i = 0; i < materialCount_; i++) {
+	for (int i = 0; i < materialCount_; i++) 
+	{
 	
-		
+		D3D11_MAPPED_SUBRESOURCE pdata;
+		Direct3D::pContext_->Map(pConstantBuffer_, 0, D3D11_MAP_WRITE_DISCARD, 0, &pdata);	// GPUからのデータアクセスを止める
+		memcpy_s(pdata.pData, pdata.RowPitch, (void*)(&cb), sizeof(cb));	// データを値を送る
+
+		//テクスチャとサンプラーをシェーダーへ
+		if (pMaterialList_[i].pTexture_)
+		{
+			ID3D11SamplerState* pSampler = pMaterialList_[i].pTexture_->GetSampler();
+			Direct3D::pContext_->PSSetSamplers(0, 1, &pSampler);
+
+			ID3D11ShaderResourceView* pSRV = pMaterialList_[i].pTexture_->GetSRV();
+			Direct3D::pContext_->PSSetShaderResources(0, 1, &pSRV);
+			cb.isTexture = true;
+
+		}
+		//テクスチャがないとき
+		else
+		{
+			cb.isTexture = false;
+			cb.diffuseColor = pMaterialList_->diffuse_;
+		}
+
+		Direct3D::pContext_->Unmap(pConstantBuffer_, 0);	//再開
+
+		//頂点バッファ
+		UINT stride = sizeof(VERTEX);
+		UINT offset = 0;
+		Direct3D::pContext_->IASetVertexBuffers(0, 1, &pVertexBuffer_, &stride, &offset);
+
 		// インデックスバッファーをセット
 		stride = sizeof(int);
 		offset = 0;
@@ -97,18 +122,8 @@ void Fbx::Draw(Transform& _transform)
 		Direct3D::pContext_->VSSetConstantBuffers(0, 1, &pConstantBuffer_);	//頂点シェーダー用	
 		Direct3D::pContext_->PSSetConstantBuffers(0, 1, &pConstantBuffer_);	//ピクセルシェーダー用
 		
-		//テクスチャとサンプラーをシェーダーへ
-		if (pMaterialList_[i].pTexture_)
-		{
-			ID3D11SamplerState* pSampler = pMaterialList_[i].pTexture_->GetSampler();
-			Direct3D::pContext_->PSSetSamplers(0, 1, &pSampler);
-			ID3D11ShaderResourceView* pSRV = pMaterialList_[i].pTexture_->GetSRV();
-			Direct3D::pContext_->PSSetShaderResources(0, 1, &pSRV);
-			Direct3D::pContext_->Unmap(pConstantBuffer_, 0);	//再開
-		}
-
 		//描画
-		Direct3D::pContext_->DrawIndexed(vertexCount_, 0, 0);
+		Direct3D::pContext_->DrawIndexed(indexCount_[i], 0, 0);
 	}
 }
 
@@ -140,6 +155,11 @@ void Fbx::InitVertex(fbxsdk::FbxMesh* mesh)
 			int uvIndex = mesh->GetTextureUVIndex(poly, vertex, FbxLayerElement::eTextureDiffuse);
 			FbxVector2  uv = pUV->GetDirectArray().GetAt(uvIndex);
 			vertices[index].uv = XMVectorSet((float)uv.mData[0], (float)(1.0f - uv.mData[1]), 0.0f, 0.0f);
+
+			//頂点の法線
+			FbxVector4 Normal;
+			mesh->GetPolygonVertexNormal(poly, vertex, Normal);	//ｉ番目のポリゴンの、ｊ番目の頂点の法線をゲット
+			vertices[index].normal = XMVectorSet((float)Normal[0], (float)Normal[1], (float)Normal[2], 0.0f);
 		}
 	}
 
@@ -160,6 +180,7 @@ void Fbx::InitVertex(fbxsdk::FbxMesh* mesh)
 void Fbx::InitIndex(fbxsdk::FbxMesh* mesh)
 {
 	pIndexBuffer_ = new ID3D11Buffer * [materialCount_];
+	indexCount_ = std::vector<int>(materialCount_);
 
 	int* index = new int[polygonCount_ * 3];
 
@@ -183,7 +204,9 @@ void Fbx::InitIndex(fbxsdk::FbxMesh* mesh)
 					count++;
 				}
 			}
+			
 		}
+		indexCount_[i] = count;
 
 		// 頂点バッファ作成
 		D3D11_BUFFER_DESC   bd;
@@ -251,6 +274,11 @@ void Fbx::InitMaterial(fbxsdk::FbxNode* pNode)
 		else
 		{
 			pMaterialList_[i].pTexture_ = nullptr;
+
+			//マテリアルの色
+			FbxSurfaceLambert* pMaterial = (FbxSurfaceLambert*)pNode->GetMaterial(i);
+			FbxDouble3  diffuse = pMaterial->Diffuse;
+			pMaterialList_[i].diffuse_ = XMFLOAT4((float)diffuse[0], (float)diffuse[1], (float)diffuse[2], 1.0f);
 		}
 	}
 }

@@ -83,7 +83,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 
 	//fbxを初期化
 	Fbx* pFbx = new Fbx;
-	hr = pFbx->Load("Assets/Oden.fbx");
+	hr = pFbx->Load("Assets/texture2Model.fbx");
 
 	if (FAILED(hr)) {
 		MessageBox(nullptr, "いずれかのモデルの初期化に失敗しました", "エラー", MB_OK);
@@ -113,6 +113,10 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 
 			//ゲームの処理
 			Direct3D::BeginDraw();
+
+			//深度バッファクリア
+			Direct3D::pContext_->ClearDepthStencilView(Direct3D::pDepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
+
 
 			//いろいろ出力
 			static float angle = 0; angle += 0.01;

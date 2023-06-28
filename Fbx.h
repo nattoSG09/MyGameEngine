@@ -5,6 +5,9 @@
 #include <fbxsdk.h>
 #include <string>
 #include "Transform.h"
+#include <vector>
+
+using std::vector;
 
 //前方宣言
 class Texture;
@@ -25,6 +28,7 @@ private:
 	struct MATERIAL
 	{
 		Texture* pTexture_;
+		XMFLOAT4 diffuse_;
 	};
 
 	//コンスタントバッファに情報を渡すための構造体
@@ -32,11 +36,14 @@ private:
 		XMMATRIX	matWVP;
 		XMMATRIX	matNormal;
 		XMVECTOR	lightPos;
+		XMFLOAT4	diffuseColor;
+		bool		isTexture;
 	};
 	//頂点情報
 	struct VERTEX{
 		XMVECTOR position;
 		XMVECTOR uv;
+		XMVECTOR normal;
 	};
 
 	//各バッファ情報
@@ -48,6 +55,8 @@ private:
 	int vertexCount_;	//頂点数
 	int polygonCount_;	//ポリゴン数
 	int materialCount_;	//マテリアルの個数
+	std::vector<int> indexCount_;
+
 public:
 	//コンストラクタ
 	Fbx();
