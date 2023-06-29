@@ -83,7 +83,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 
 	//fbxを初期化
 	Fbx* pFbx = new Fbx;
-	hr = pFbx->Load("Assets/texture2Model.fbx");
+	hr = pFbx->Load("Assets/Oden.fbx");
 
 	if (FAILED(hr)) {
 		MessageBox(nullptr, "いずれかのモデルの初期化に失敗しました", "エラー", MB_OK);
@@ -119,7 +119,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 
 
 			//いろいろ出力
-			static float angle = 0; angle += 0.01;
+			static float angle = 0; angle += 0.005;
 			
 			//Diceを描画
 			#if 0
