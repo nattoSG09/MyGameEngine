@@ -70,23 +70,27 @@ void Fbx::Draw(Transform& _transform)
 	//シェーダーを切り替える
 	Direct3D::SetShader(SHADER_3D);
 
-	//コンスタントバッファをセット
-	CONSTANT_BUFFER cb;
-	cb.matWVP = XMMatrixTranspose(_transform.GetWorldMatrix() * Camera::GetViewMatrix() * Camera::GetProjectionMatrix());
-	cb.matNormal = XMMatrixTranspose(_transform.GetNormalMatrix());
-
-	//ライトの位置
-	cb.lightPos = XMVectorSet(-0.7f, 0.5f, -0.7f, 0.0f);
-
-
-	Direct3D::pContext_->Unmap(pConstantBuffer_, 0);
-
 	for (int i = 0; i < materialCount_; i++) 
 	{
-	
+		//コンスタントバッファをセット
+		CONSTANT_BUFFER cb;
+		cb.matWVP = XMMatrixTranspose(_transform.GetWorldMatrix() * Camera::GetViewMatrix() * Camera::GetProjectionMatrix());
+		cb.matNormal = XMMatrixTranspose(_transform.GetNormalMatrix());
+
+		//マテリアルカラー
+		cb.diffuseColor = pMaterialList_[i].diffuse_;
+
+		//テクスチャの有無
+		cb.isTexture = pMaterialList_[i].pTexture_ != nullptr;
+
+		//ライトの位置
+		cb.lightPos = XMVectorSet(-0.7f, 0.5f, -0.7f, 0.0f);
+
 		D3D11_MAPPED_SUBRESOURCE pdata;
 		Direct3D::pContext_->Map(pConstantBuffer_, 0, D3D11_MAP_WRITE_DISCARD, 0, &pdata);	// GPUからのデータアクセスを止める
 		memcpy_s(pdata.pData, pdata.RowPitch, (void*)(&cb), sizeof(cb));	// データを値を送る
+
+		Direct3D::pContext_->Unmap(pConstantBuffer_, 0);
 
 		//テクスチャとサンプラーをシェーダーへ
 		if (pMaterialList_[i].pTexture_)
@@ -96,14 +100,7 @@ void Fbx::Draw(Transform& _transform)
 
 			ID3D11ShaderResourceView* pSRV = pMaterialList_[i].pTexture_->GetSRV();
 			Direct3D::pContext_->PSSetShaderResources(0, 1, &pSRV);
-			cb.isTexture = true;
 
-		}
-		//テクスチャがないとき
-		else
-		{
-			cb.isTexture = false;
-			cb.diffuseColor = pMaterialList_->diffuse_;
 		}
 
 		Direct3D::pContext_->Unmap(pConstantBuffer_, 0);	//再開
@@ -276,7 +273,7 @@ void Fbx::InitMaterial(fbxsdk::FbxNode* pNode)
 			pMaterialList_[i].pTexture_ = nullptr;
 
 			//マテリアルの色
-			FbxSurfaceLambert* pMaterial = (FbxSurfaceLambert*)pNode->GetMaterial(i);
+			FbxSurfaceLambert* pMaterial = (FbxSurfaceLambert*)pNode->GetMaterial(i);//i番目のマテリアルを取得
 			FbxDouble3  diffuse = pMaterial->Diffuse;
 			pMaterialList_[i].diffuse_ = XMFLOAT4((float)diffuse[0], (float)diffuse[1], (float)diffuse[2], 1.0f);
 		}

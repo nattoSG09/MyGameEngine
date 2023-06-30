@@ -5,6 +5,7 @@
 #include "Dice.h"
 #include "Camera.h"
 #include "Fbx.h"
+#include "Input.h"
 
 //定数宣言
 const char* WIN_CLASS_NAME = "SampleGame";  //ウィンドウクラス名
@@ -69,6 +70,12 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 		PostQuitMessage(0);
 	}
 
+	//カメラを初期化
+	Camera::Initialize(winW,winH);
+
+	//DirectInputの初期化
+	Input::Initialize(hWnd);
+
 	//Quadを作成
 	/*Quad* pQuad = new Quad;
 	hr = pQuad->Initialize();*/
@@ -83,15 +90,13 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 
 	//fbxを初期化
 	Fbx* pFbx = new Fbx;
-	hr = pFbx->Load("Assets/Oden.fbx");
+	hr = pFbx->Load("Assets/Models/texture2Model.fbx");
 
 	if (FAILED(hr)) {
 		MessageBox(nullptr, "いずれかのモデルの初期化に失敗しました", "エラー", MB_OK);
 		PostQuitMessage(0);
 	}
 
-	//カメラを初期化
-	Camera::Initialize(winW,winH);
 
 	//メッセージループ（何か起きるのを待つ）
 	MSG msg;
@@ -111,6 +116,9 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 			//Camaraの更新処理
 			Camera::Update();
 
+			//Inputの更新処理
+			Input::Update();
+
 			//ゲームの処理
 			Direct3D::BeginDraw();
 
@@ -119,7 +127,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 
 
 			//いろいろ出力
-			static float angle = 0; angle += 0.005;
+			static float angle = 0; angle += 0.01;
 			
 			//Diceを描画
 			#if 0
@@ -151,6 +159,11 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 			}
 			#endif
 
+			if(Input::IsKey(DIK_ESCAPE) )
+			{
+				PostQuitMessage(0);  //プログラム終了
+			}
+
 			//描画処理
 			Direct3D::EndDraw();
 		}
@@ -162,6 +175,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 	SAFE_DELETE(pDice);
 	SAFE_DELETE(pSprite);
 	SAFE_DELETE(pFbx);
+	Input::Release();
 
 	return 0;
 }

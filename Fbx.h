@@ -37,8 +37,9 @@ private:
 		XMMATRIX	matNormal;
 		XMVECTOR	lightPos;
 		XMFLOAT4	diffuseColor;
-		bool		isTexture;
+		int			isTexture;
 	};
+
 	//í∏ì_èÓïÒ
 	struct VERTEX{
 		XMVECTOR position;

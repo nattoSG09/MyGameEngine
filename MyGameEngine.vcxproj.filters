@@ -38,6 +38,7 @@
     <ClCompile Include="Fbx.cpp">
       <Filter>Engine</Filter>
     </ClCompile>
+    <ClCompile Include="Input.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h">
@@ -64,6 +65,7 @@
     <ClInclude Include="Fbx.h">
       <Filter>Engine</Filter>
     </ClInclude>
+    <ClInclude Include="Input.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Simple2D.hlsl">
