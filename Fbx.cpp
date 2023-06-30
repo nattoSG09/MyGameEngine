@@ -65,7 +65,7 @@ HRESULT Fbx::Load(string fileName)
 	return S_OK;
 }
 
-void Fbx::Draw(Transform& _transform)
+void Fbx::Draw(Transform& _transform, XMFLOAT4 _worldLight, XMFLOAT4 _lightPos)
 {
 	//シェーダーを切り替える
 	Direct3D::SetShader(SHADER_3D);
@@ -83,8 +83,10 @@ void Fbx::Draw(Transform& _transform)
 		//テクスチャの有無
 		cb.isTexture = pMaterialList_[i].pTexture_ != nullptr;
 
-		//ライトの位置
-		cb.lightPos = XMVectorSet(-0.7f, 0.5f, -0.7f, 0.0f);
+		//ライトの位置・強度
+		cb.matLightPos = _lightPos;
+		cb.matLight = _worldLight;
+
 
 		D3D11_MAPPED_SUBRESOURCE pdata;
 		Direct3D::pContext_->Map(pConstantBuffer_, 0, D3D11_MAP_WRITE_DISCARD, 0, &pdata);	// GPUからのデータアクセスを止める

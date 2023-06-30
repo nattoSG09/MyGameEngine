@@ -19,6 +19,7 @@ using std::string;
 enum SHADER_TYPE {
 	SHADER_2D,
 	SHADER_3D,
+	SHADER_PL3D,
 	SHADER_MAX,
 };
 
@@ -35,6 +36,7 @@ namespace Direct3D
 	HRESULT InitShader();
 	HRESULT InitShader3D();
 	HRESULT InitShader2D();
+	HRESULT InitShaderPL3D();
 
 	//使用するシェーダーを選択
 	void SetShader(SHADER_TYPE _type);

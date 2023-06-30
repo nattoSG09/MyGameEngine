@@ -32,16 +32,20 @@ private:
 	};
 
 	//コンスタントバッファに情報を渡すための構造体
-	struct CONSTANT_BUFFER{
+	struct CONSTANT_BUFFER
+	{
 		XMMATRIX	matWVP;
 		XMMATRIX	matNormal;
-		XMVECTOR	lightPos;
+		XMFLOAT4	matLightPos;
+		XMFLOAT4	matLight;
+
 		XMFLOAT4	diffuseColor;
 		int			isTexture;
 	};
 
 	//頂点情報
-	struct VERTEX{
+	struct VERTEX
+	{
 		XMVECTOR position;
 		XMVECTOR uv;
 		XMVECTOR normal;
@@ -69,7 +73,7 @@ public:
 	HRESULT Load(string fileName);
 
 	//描画
-	void Draw(Transform& transform);
+	void Draw(Transform& _transform,XMFLOAT4 _worldLight,XMFLOAT4 _lightPos);
 	
 	//解放
 	void Release();
