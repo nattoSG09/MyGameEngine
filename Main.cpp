@@ -154,8 +154,10 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 			#if 1
 			{
 				Transform t;
-				t.rotate_.y = angle;
-				pFbx->Draw(t);
+				//t.rotate_.y = angle;
+				XMFLOAT4 wl = { 1.5, 1.5, 2.0, 0 };
+				XMFLOAT4 l = { sinf(angle) , 0,-2, 0 };
+				pFbx->Draw(t,wl,l);
 			}
 			#endif
 

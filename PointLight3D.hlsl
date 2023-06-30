@@ -70,7 +70,7 @@ float4 PS(VS_OUT inData) : SV_Target
 	float4 ambient;
 
 	//ライトと物体の距離を計算(ライトの位置ー物体の位置(頂点ごと))
-	float len = length(matLightPos.xyz - mul(inData.tmpPos.xyz, normal));
+	float len = length(matLightPos.xyz - mul(inData.tmpPos.xyz, matNormal));
 
 	//テクスチャがあるとき
 	if (isTexture) {
