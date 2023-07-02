@@ -117,14 +117,17 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 		//メッセージなし
 		else
 		{
-			//Camaraの更新処理
-			Camera::Update();
+			//Direct3d更新処理
+			{
+				//Camaraの更新処理
+				Camera::Update();
 
-			//Inputの更新処理
-			Input::Update();
+				//Inputの更新処理
+				Input::Update();
 
-			//ライトの更新処理
-			Light::Update();
+				//ライトの更新処理
+				Light::Update();
+			}
 
 			//ゲームの処理
 			Direct3D::BeginDraw();
@@ -162,25 +165,29 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 				Transform t;
 				//t.rotate_.y = angle;
 				
-				static float x = 0;
-				if (Input::IsKey(DIK_A))x-= 0.001f;
-				if (Input::IsKey(DIK_D))x+= 0.001f;
-				static float y = 0;
-				if (Input::IsKey(DIK_W))y+= 0.001f;
-				if (Input::IsKey(DIK_S))y-= 0.001f;
-				static float z = 0;
-				if (Input::IsKey(DIK_Q))z += 0.001f;
-				if (Input::IsKey(DIK_E))z -= 0.001f;
-				Light::SetPosition(XMFLOAT4(x, y, z, 0));
-				Light::SetIntensity(2.0f);
+				//ライトの処理
+				{
+					static float x = 0;
+					if (Input::IsKey(DIK_A))x -= 0.001f;
+					if (Input::IsKey(DIK_D))x += 0.001f;
+					static float y = 0;
+					if (Input::IsKey(DIK_W))y += 0.001f;
+					if (Input::IsKey(DIK_S))y -= 0.001f;
+					static float z = 0;
+					if (Input::IsKey(DIK_Q))z += 0.001f;
+					if (Input::IsKey(DIK_E))z -= 0.001f;
+					//Light::SetPosition(XMFLOAT4(x, y, z, 0));
+					Light::SetPosition(XMFLOAT4(-0.3f, 0.6f, -0.6f, 0));
+					Light::SetIntensity(2.0f);
+				}
+
+				//描画
 				pFbx->Draw(t);
 			}
 			#endif
 
-
-			if(Input::IsKey(DIK_ESCAPE) ){
-				PostQuitMessage(0);  //プログラム終了
-			}
+			//入力処理確認
+			if(Input::IsKey(DIK_ESCAPE) )PostQuitMessage(0);
 
 			//描画処理
 			Direct3D::EndDraw();
