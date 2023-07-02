@@ -90,7 +90,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 
 	//fbxを初期化
 	Fbx* pFbx = new Fbx;
-	hr = pFbx->Load("Assets/Models/texture2Model.fbx");
+	hr = pFbx->Load("Assets/Ball2.fbx");
 
 	if (FAILED(hr)) {
 		MessageBox(nullptr, "いずれかのモデルの初期化に失敗しました", "エラー", MB_OK);
@@ -125,9 +125,8 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 			//深度バッファクリア
 			Direct3D::pContext_->ClearDepthStencilView(Direct3D::pDepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
 
-
 			//いろいろ出力
-			static float angle = 0; angle += 0.01;
+			static float angle = 0; angle += 0.001;
 			
 			//Diceを描画
 			#if 0
@@ -154,15 +153,28 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 			#if 1
 			{
 				Transform t;
-				//t.rotate_.y = angle;
-				XMFLOAT4 wl = { 1.5, 1.5, 2.0, 0 };
-				XMFLOAT4 l = { sinf(angle) , 0,-2, 0 };
-				pFbx->Draw(t,wl,l);
+				t.rotate_.y = angle;
+				
+				static float x = 0;
+				if (Input::IsKey(DIK_A))x-= 0.001f;
+				if (Input::IsKey(DIK_D))x+= 0.001f;
+				static float y = 0;
+				if (Input::IsKey(DIK_W))y+= 0.001f;
+				if (Input::IsKey(DIK_S))y-= 0.001f;
+				static float z = 0;
+				if (Input::IsKey(DIK_Q))z += 0.001f;
+				if (Input::IsKey(DIK_E))z -= 0.001f;
+
+
+				XMFLOAT4 worldLight = { 1.5f, 1.5f, 1.5f, 0.0f };//RGB0
+				XMFLOAT4 lightPosition = { x , y, z , 0.0f };
+
+				pFbx->Draw(t,worldLight, lightPosition);
 			}
 			#endif
 
-			if(Input::IsKey(DIK_ESCAPE) )
-			{
+
+			if(Input::IsKey(DIK_ESCAPE) ){
 				PostQuitMessage(0);  //プログラム終了
 			}
 

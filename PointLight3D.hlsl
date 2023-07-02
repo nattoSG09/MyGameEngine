@@ -79,7 +79,7 @@ float4 PS(VS_OUT inData) : SV_Target
 	}
 	//テクスチャがないとき
 	else {
-		diffuse = (matLight * diffuseColor * inData.color) / len;
+		diffuse = ((matLight * diffuseColor * inData.color)*2) / len;
 		ambient = matLight * diffuseColor * ambientSource;
 	}
 
