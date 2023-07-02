@@ -1,6 +1,7 @@
 #include "Fbx.h"
 #include "Direct3D.h"
 #include "Camera.h"
+#include "Light.h"
 #include "Texture.h"
 
 using std::size;
@@ -65,7 +66,7 @@ HRESULT Fbx::Load(string fileName)
 	return S_OK;
 }
 
-void Fbx::Draw(Transform& _transform, XMFLOAT4 _worldLight, XMFLOAT4 _lightPos)
+void Fbx::Draw(Transform& _transform)
 {
 	//シェーダーを切り替える
 	Direct3D::SetShader(SHADER_3D);
@@ -84,8 +85,8 @@ void Fbx::Draw(Transform& _transform, XMFLOAT4 _worldLight, XMFLOAT4 _lightPos)
 		cb.isTexture = pMaterialList_[i].pTexture_ != nullptr;
 
 		//ライトの位置・強度
-		cb.matLightPos = _lightPos;
-		cb.matLight = _worldLight;
+		cb.matLightPos = Light::GetPosition();
+		cb.matLight = Light::GetworldLight();
 
 
 		D3D11_MAPPED_SUBRESOURCE pdata;

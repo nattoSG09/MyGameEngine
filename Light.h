@@ -7,6 +7,10 @@
 //using宣言
 using namespace DirectX;
 
+struct COLOR {
+	float R, G, B;
+};
+
 //-----------------------------------------------------------
 //ライト
 //-----------------------------------------------------------
@@ -22,6 +26,14 @@ namespace Light
 	void SetPosition(XMFLOAT4 position);
 
 	//ライトの強度を設定
-	void SetIntensity(XMFLOAT4 intensity);
+	void SetIntensity(float intensity);
 
+	//ライトの色を設定
+	void SetColor(COLOR color);
+
+	//ライトの位置を取得
+	XMFLOAT4 GetPosition();
+
+	//ライトの強度・色を取得
+	XMFLOAT4 GetworldLight();
 }

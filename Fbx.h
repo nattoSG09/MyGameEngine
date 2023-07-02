@@ -73,7 +73,7 @@ public:
 	HRESULT Load(string fileName);
 
 	//•`‰æ
-	void Draw(Transform& _transform,XMFLOAT4 _worldLight,XMFLOAT4 _lightPos);
+	void Draw(Transform& _transform);
 	
 	//‰ð•ú
 	void Release();

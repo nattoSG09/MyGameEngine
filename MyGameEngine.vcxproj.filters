@@ -38,10 +38,10 @@
     <ClCompile Include="Fbx.cpp">
       <Filter>Engine</Filter>
     </ClCompile>
-    <ClCompile Include="Light.cpp" />
     <ClCompile Include="Input.cpp">
       <Filter>Engine</Filter>
     </ClCompile>
+    <ClCompile Include="Light.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h">
@@ -68,10 +68,10 @@
     <ClInclude Include="Fbx.h">
       <Filter>Engine</Filter>
     </ClInclude>
-    <ClInclude Include="Light.h" />
     <ClInclude Include="Input.h">
       <Filter>Engine</Filter>
     </ClInclude>
+    <ClInclude Include="Light.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Simple2D.hlsl">

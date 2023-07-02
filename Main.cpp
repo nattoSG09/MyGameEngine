@@ -4,6 +4,7 @@
 #include "Sprite.h"
 #include "Dice.h"
 #include "Camera.h"
+#include "Light.h"
 #include "Fbx.h"
 #include "Input.h"
 
@@ -73,8 +74,11 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 	//カメラを初期化
 	Camera::Initialize(winW,winH);
 
-	//DirectInputの初期化
+	//Inputの初期化
 	Input::Initialize(hWnd);
+
+	//ライトの初期化
+	Light::Initialize();
 
 	//Quadを作成
 	/*Quad* pQuad = new Quad;
@@ -118,6 +122,9 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 
 			//Inputの更新処理
 			Input::Update();
+
+			//ライトの更新処理
+			Light::Update();
 
 			//ゲームの処理
 			Direct3D::BeginDraw();
@@ -164,12 +171,9 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 				static float z = 0;
 				if (Input::IsKey(DIK_Q))z += 0.001f;
 				if (Input::IsKey(DIK_E))z -= 0.001f;
-
-
-				XMFLOAT4 worldLight = { 1.5f, 1.5f, 1.5f, 0.0f };//RGB0
-				XMFLOAT4 lightPosition = { x , y, z , 0.0f };
-
-				pFbx->Draw(t,worldLight, lightPosition);
+				Light::SetPosition(XMFLOAT4(x, y, z, 0));
+				Light::SetIntensity(2.0f);
+				pFbx->Draw(t);
 			}
 			#endif
 
