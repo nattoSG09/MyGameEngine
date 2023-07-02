@@ -160,7 +160,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 			#if 1
 			{
 				Transform t;
-				t.rotate_.y = angle;
+				//t.rotate_.y = angle;
 				
 				static float x = 0;
 				if (Input::IsKey(DIK_A))x-= 0.001f;
