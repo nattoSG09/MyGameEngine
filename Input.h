@@ -11,8 +11,21 @@
 
 namespace Input
 {
+	//初期化
 	void Initialize(HWND _hWnd);
+	
+	//更新
 	void Update();
-	bool IsKey(int _keyCord);
+	
+	//キーを押しているかどうか
+	bool IsKey(int keyCode);
+
+	//今キーを押したかどうか
+	bool IsKeyDown(int keyCode);
+
+	//今キーを離したかどうか
+	bool IsKeyUp(int keyCode);
+
+	//解放
 	void Release();
 }

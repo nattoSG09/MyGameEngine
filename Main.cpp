@@ -96,6 +96,9 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 	Fbx* pFbx = new Fbx;
 	hr = pFbx->Load("Assets/Ball2.fbx");
 
+	Fbx* pFbx2 = new Fbx;
+	hr = pFbx2->Load("Assets/Ball2.fbx");
+
 	if (FAILED(hr)) {
 		MessageBox(nullptr, "いずれかのモデルの初期化に失敗しました", "エラー", MB_OK);
 		PostQuitMessage(0);
@@ -162,9 +165,6 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 			//Oden.fbxを描画
 			#if 1
 			{
-				Transform t;
-				//t.rotate_.y = angle;
-				
 				//ライトの処理
 				{
 					static float x = 0;
@@ -176,18 +176,31 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 					static float z = 0;
 					if (Input::IsKey(DIK_Q))z += 0.001f;
 					if (Input::IsKey(DIK_E))z -= 0.001f;
-					//Light::SetPosition(XMFLOAT4(x, y, z, 0));
+					//Light::SetPosition(XMFLOAT4(0, y, z, 0));
 					Light::SetPosition(XMFLOAT4(-0.3f, 0.6f, -0.6f, 0));
 					Light::SetIntensity(2.0f);
 				}
 
 				//描画
+				Transform t;
+				t.position_.x = 3.0f;
 				pFbx->Draw(t);
+
+				Transform t2;
+				t2.position_.x = -3.0f;
+				pFbx2->Draw(t2);
 			}
 			#endif
 
 			//入力処理確認
-			if(Input::IsKey(DIK_ESCAPE) )PostQuitMessage(0);
+			if (Input::IsKeyDown(DIK_ESCAPE))
+			{
+				static int cnt = 0;
+				cnt++;
+				if(cnt >= 3)
+					PostQuitMessage(0);
+			}
+
 
 			//描画処理
 			Direct3D::EndDraw();
@@ -200,6 +213,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 	SAFE_DELETE(pDice);
 	SAFE_DELETE(pSprite);
 	SAFE_DELETE(pFbx);
+	SAFE_DELETE(pFbx2);
 	Input::Release();
 
 	return 0;
