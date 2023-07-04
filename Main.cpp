@@ -58,6 +58,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 		NULL                 //パラメータ（なし）
 	);
 
+	//っふぁふぁｆ
 	//ウィンドウを表示
 	ShowWindow(hWnd, nCmdShow);
 
