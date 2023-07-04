@@ -1,6 +1,6 @@
 //インクルード
 #include "Texture.h"
-#include"Direct3D.h"
+#include "Direct3D.h"
 
 //コンストラクタ
 Texture::Texture()

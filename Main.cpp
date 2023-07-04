@@ -1,10 +1,10 @@
 //インクルード
 #include <Windows.h>
-#include "Direct3D.h"
+#include "Engine/Direct3D.h"
 
-#include "Camera.h"
-#include "Light.h"
-#include "Input.h"
+#include "Engine/Camera.h"
+#include "Engine/Light.h"
+#include "Engine/Input.h"
 
 //定数宣言
 const char* WIN_CLASS_NAME = "SampleGame";  //ウィンドウクラス名
