@@ -2,7 +2,6 @@
 #include <Windows.h>
 #include "Direct3D.h"
 
-#include "Fbx.h"
 #include "Camera.h"
 #include "Light.h"
 #include "Input.h"
@@ -79,19 +78,6 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 	//ライトの初期化
 	Light::Initialize();
 
-
-	//fbxを初期化
-	Fbx* pFbx = new Fbx;
-	hr = pFbx->Load("Assets/Ball2.fbx");
-
-	Fbx* pFbx2 = new Fbx;
-	hr = pFbx2->Load("Assets/Ball2.fbx");
-	if (FAILED(hr)) {
-		MessageBox(nullptr, "いずれかのモデルの初期化に失敗しました", "エラー", MB_OK);
-		PostQuitMessage(0);
-	}
-
-
 	//メッセージループ（何か起きるのを待つ）
 	MSG msg;
 	ZeroMemory(&msg, sizeof(msg));
@@ -107,7 +93,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 		//メッセージなし
 		else
 		{
-			//Direct3d更新処理
+			//ゲームの処理
 			{
 				//Camaraの更新処理
 				Camera::Update();
@@ -119,42 +105,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 				Light::Update();
 			}
 
-			//ゲームの処理
 			Direct3D::BeginDraw();
-
-			//深度バッファクリア
-			Direct3D::pContext_->ClearDepthStencilView(Direct3D::pDepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
-
-			//Oden.fbxを描画
-			#if 1
-			{
-				//ライトの処理
-				{
-					static float x = 0;
-					if (Input::IsKey(DIK_A))x -= 0.001f;
-					if (Input::IsKey(DIK_D))x += 0.001f;
-					static float y = 0;
-					if (Input::IsKey(DIK_W))y += 0.001f;
-					if (Input::IsKey(DIK_S))y -= 0.001f;
-					static float z = 0;
-					if (Input::IsKey(DIK_Q))z += 0.001f;
-					if (Input::IsKey(DIK_E))z -= 0.001f;
-					//Light::SetPosition(XMFLOAT4(x, y, z, 0));//動かせるライト
-					Light::SetPosition(XMFLOAT4(-0.3f, 0.6f, -0.6f, 0));//ボール用ライト
-					Light::SetIntensity(2);
-				}
-
-				//描画
-				static Transform t;
-				t.position_.x = 3.0f;
-				pFbx->Draw(t);
-
-				static Transform t2;
-				t2.position_.x = -3.0f;
-				pFbx->Draw(t2);
-
-			}
-			#endif
 
 			//描画処理
 			Direct3D::EndDraw();
@@ -163,9 +114,6 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 
 	//解放処理
 	Direct3D::Release();
-	
-	SAFE_DELETE(pFbx);
-	SAFE_DELETE(pFbx2);
 	Input::Release();
 
 	return 0;
