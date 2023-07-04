@@ -1,15 +1,18 @@
 #pragma once
 
-#include œœœœœ
-#include "Fbx.h"
+#include <string>
+#include <list>
 #include "Transform.h"
+
+using std::string;
 
 class GameObject
 {
-	œœœœœœœœ childList_;
-	Transform	transform_;
-	GameObject*	pParent_;
-	string	objectName_;
+protected:
+	std::list<GameObject*>	childList_;
+	Transform				transform_;
+	GameObject*				pParent_;
+	string					objectName_;
 
 public:
 	GameObject();

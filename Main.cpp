@@ -1,10 +1,12 @@
 //インクルード
 #include <Windows.h>
 #include "Engine/Direct3D.h"
+#include "Engine/RootJob.h"
 
 #include "Engine/Camera.h"
 #include "Engine/Light.h"
 #include "Engine/Input.h"
+
 
 //定数宣言
 const char* WIN_CLASS_NAME = "SampleGame";  //ウィンドウクラス名
@@ -12,6 +14,9 @@ const char* WIN_TITLE_NAME = "さんぷるげ～む";  //ウィンドウクラス名
 
 const int WINDOW_WIDTH = 800;  //ウィンドウの幅
 const int WINDOW_HEIGHT = 600; //ウィンドウの高さ
+
+//グローバル変数の宣言
+RootJob* pRootJob = nullptr;
 
 //プロトタイプ宣言
 LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
@@ -70,6 +75,10 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 		PostQuitMessage(0);
 	}
 
+	//RootJobの初期化
+	pRootJob = new RootJob;
+	pRootJob->Initialize();
+
 	//カメラを初期化
 	Camera::Initialize(winW,winH);
 
@@ -96,19 +105,17 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 		{
 			//ゲームの処理
 			{
-				//Camaraの更新処理
+				//表示
 				Camera::Update();
-
-				//Inputの更新処理
-				Input::Update();
-
-				//ライトの更新処理
 				Light::Update();
+				
+				//入力
+				Input::Update();
+				pRootJob->Update();
 			}
 
-			Direct3D::BeginDraw();
-
 			//描画処理
+			Direct3D::BeginDraw();
 			Direct3D::EndDraw();
 		}
 	}
@@ -116,6 +123,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 	//解放処理
 	Direct3D::Release();
 	Input::Release();
+	SAFE_RELEASE(pRootJob);
 
 	return 0;
 }
