@@ -139,7 +139,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 			Direct3D::pContext_->ClearDepthStencilView(Direct3D::pDepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
 
 			//いろいろ出力
-			static float angle = 0; angle += 0.001;
+			static float angle = 0; angle += 0.01;
 			
 			//Diceを描画
 			#if 0
@@ -176,19 +176,20 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 					static float z = 0;
 					if (Input::IsKey(DIK_Q))z += 0.001f;
 					if (Input::IsKey(DIK_E))z -= 0.001f;
-					//Light::SetPosition(XMFLOAT4(0, y, z, 0));
-					Light::SetPosition(XMFLOAT4(-0.3f, 0.6f, -0.6f, 0));
-					Light::SetIntensity(2.0f);
+					//Light::SetPosition(XMFLOAT4(x, y, z, 0));//動かせるライト
+					Light::SetPosition(XMFLOAT4(-0.3f, 0.6f, -0.6f, 0));//ボール用ライト
+					Light::SetIntensity(2);
 				}
 
 				//描画
-				Transform t;
+				static Transform t;
 				t.position_.x = 3.0f;
 				pFbx->Draw(t);
 
-				Transform t2;
+				static Transform t2;
 				t2.position_.x = -3.0f;
-				pFbx2->Draw(t2);
+				pFbx->Draw(t2);
+
 			}
 			#endif
 
@@ -200,7 +201,6 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 				if(cnt >= 3)
 					PostQuitMessage(0);
 			}
-
 
 			//描画処理
 			Direct3D::EndDraw();
