@@ -1,11 +1,10 @@
 //インクルード
 #include <Windows.h>
 #include "Direct3D.h"
-#include "Sprite.h"
-#include "Dice.h"
+
+#include "Fbx.h"
 #include "Camera.h"
 #include "Light.h"
-#include "Fbx.h"
 #include "Input.h"
 
 //定数宣言
@@ -80,17 +79,6 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 	//ライトの初期化
 	Light::Initialize();
 
-	//Quadを作成
-	/*Quad* pQuad = new Quad;
-	hr = pQuad->Initialize();*/
-
-	//DIceを初期化
-	Dice* pDice = new Dice;
-	hr = pDice->Initialize();
-
-	//Spriteを初期化
-	Sprite* pSprite = new Sprite;
-	hr = pSprite->Initialize(winW,winH);
 
 	//fbxを初期化
 	Fbx* pFbx = new Fbx;
@@ -98,7 +86,6 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 
 	Fbx* pFbx2 = new Fbx;
 	hr = pFbx2->Load("Assets/Ball2.fbx");
-
 	if (FAILED(hr)) {
 		MessageBox(nullptr, "いずれかのモデルの初期化に失敗しました", "エラー", MB_OK);
 		PostQuitMessage(0);
@@ -138,30 +125,6 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 			//深度バッファクリア
 			Direct3D::pContext_->ClearDepthStencilView(Direct3D::pDepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
 
-			//いろいろ出力
-			static float angle = 0; angle += 0.01;
-			
-			//Diceを描画
-			#if 0
-			{
-				Transform t;
-				t.rotate_.x += angle;
-				t.rotate_.y += angle;
-				t.rotate_.z += angle;
-				t.position_ = { -3,0,0 };
-				pDice->Draw(t);
-			}
-			#endif
-
-			//spriteを描画
-			#if 0
-			{
-				Transform t;
-				t.position_ = { 0,-0.7,0 };
-				pSprite->Draw(t);
-			}
-			#endif
-			
 			//Oden.fbxを描画
 			#if 1
 			{
@@ -193,15 +156,6 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 			}
 			#endif
 
-			//入力処理確認
-			if (Input::IsKeyDown(DIK_ESCAPE))
-			{
-				static int cnt = 0;
-				cnt++;
-				if(cnt >= 3)
-					PostQuitMessage(0);
-			}
-
 			//描画処理
 			Direct3D::EndDraw();
 		}
@@ -210,8 +164,6 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 	//解放処理
 	Direct3D::Release();
 	
-	SAFE_DELETE(pDice);
-	SAFE_DELETE(pSprite);
 	SAFE_DELETE(pFbx);
 	SAFE_DELETE(pFbx2);
 	Input::Release();

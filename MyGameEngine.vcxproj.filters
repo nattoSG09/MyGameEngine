@@ -16,9 +16,6 @@
     <ClCompile Include="Camera.cpp">
       <Filter>Engine</Filter>
     </ClCompile>
-    <ClCompile Include="Dice.cpp">
-      <Filter>Engine</Filter>
-    </ClCompile>
     <ClCompile Include="Direct3D.cpp">
       <Filter>Engine</Filter>
     </ClCompile>
@@ -45,9 +42,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h">
-      <Filter>Engine</Filter>
-    </ClInclude>
-    <ClInclude Include="Dice.h">
       <Filter>Engine</Filter>
     </ClInclude>
     <ClInclude Include="Direct3D.h">

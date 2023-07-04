@@ -138,7 +138,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
-    <ClCompile Include="Dice.cpp" />
     <ClCompile Include="Fbx.cpp" />
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="Light.cpp" />
@@ -151,7 +150,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />
-    <ClInclude Include="Dice.h" />
     <ClInclude Include="Direct3D.h" />
     <ClInclude Include="Fbx.h" />
     <ClInclude Include="Input.h" />
