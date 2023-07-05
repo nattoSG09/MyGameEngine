@@ -77,6 +77,7 @@ void Fbx::Draw(Transform& _transform)
 		CONSTANT_BUFFER cb;
 
 		cb.matWVP = XMMatrixTranspose(_transform.GetWorldMatrix() * Camera::GetViewMatrix() * Camera::GetProjectionMatrix());
+		cb.matW = _transform.GetWorldMatrix();
 		cb.matNormal = XMMatrixTranspose(_transform.GetNormalMatrix());
 		cb.LightPos = Light::GetPosition();
 		cb.Light = Light::GetworldLight();

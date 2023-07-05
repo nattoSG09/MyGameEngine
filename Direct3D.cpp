@@ -267,7 +267,7 @@ HRESULT Direct3D::InitShader2D()
 HRESULT Direct3D::InitShaderPL3D()
 {
 	HRESULT hr;
-	string fileName = "PointLight3D.hlsl";
+	string fileName = "Point3D.hlsl";
 	//マルチバイト文字→ワイド文字へ変換
 	wchar_t wtext[FILENAME_MAX];
 	size_t ret;

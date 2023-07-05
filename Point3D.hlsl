@@ -12,6 +12,7 @@ cbuffer global
 {
 	float4x4	matWVP;		// ワールド・ビュー・プロジェクションの合成行列
 	float4x4	matNormal;	//法線
+	float4x4	matW;
 
 	//ライトの情報
 	float4		lightPos;
@@ -51,11 +52,15 @@ VS_OUT VS(float4 pos : POSITION, float4 uv : TEXCOORD, float4 normal : NORMAL)
 	outData.uv = uv;
 
 	//ライト
-	outData.lightDir = float4(lightPos.xyz, 1.0) - mul(pos.xyz, matNormal);
+	outData.lightDir = float4(lightPos.xyz, 1.0) - mul(pos.xyzw, matW);
+	outData.lightDir = float4(outData.lightDir.xyz, 0);
+	outData.lightDir = normalize(outData.lightDir);
+
 	outData.lightLen = length(outData.lightDir);
 
 	//法線
-	outData.normal = mul(normal, matNormal);
+	normal = float4(normal.xyz, 0);
+	outData.normal = mul(normal, matWVP);
 
 	//輝度情報をピクセルシェーダ―へ
 	float4 light = lightPos;

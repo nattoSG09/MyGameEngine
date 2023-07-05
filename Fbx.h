@@ -36,6 +36,7 @@ private:
 	{
 		XMMATRIX	matWVP;
 		XMMATRIX	matNormal;
+		XMMATRIX	matW;
 
 		XMFLOAT4	LightPos;
 		XMFLOAT4	Light;
