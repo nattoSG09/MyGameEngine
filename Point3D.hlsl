@@ -54,9 +54,9 @@ VS_OUT VS(float4 pos : POSITION, float4 uv : TEXCOORD, float4 normal : NORMAL)
 	//ÉâÉCÉg
 	outData.lightDir = float4(lightPos.xyz, 1.0) - mul(pos.xyzw, matW);
 	outData.lightDir = float4(outData.lightDir.xyz, 0);
-	outData.lightDir = normalize(outData.lightDir);
 
 	outData.lightLen = length(outData.lightDir);
+	outData.lightDir = normalize(outData.lightDir);
 
 	//ñ@ê¸
 	normal = float4(normal.xyz, 0);
