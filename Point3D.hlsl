@@ -11,12 +11,14 @@ SamplerState	g_sampler : register(s0);	//サンプラー
 cbuffer global
 {
 	float4x4	matWVP;		// ワールド・ビュー・プロジェクションの合成行列
-	float4x4	matNormal;	// ワールド行列
-	float4		matLightPos;//ライトの位置
-	float4		matLight;	//ライトの強度
+	float4x4	matNormal;	//法線
+
+	//ライトの情報
+	float4		lightPos;
+	float4		wLight;
 
 	float4		diffuseColor;		// ディフューズカラー（マテリアルの色）
-	bool		isTexture;		// テクスチャ貼ってあるかどうか
+	bool		isTexture;			// テクスチャ貼ってあるかどうか
 };
 
 //───────────────────────────────────────
@@ -28,7 +30,9 @@ struct VS_OUT
 	float2 uv	: TEXCOORD;		//UV座標
 	float4 color: COLOR;		//色（輝度）
 
-	float4 tmpPos: TMP_POSITION;//実際の位置
+	float4 lightDir : TEXCOORD1;
+	float  lightLen : TEXCOORD2;
+	float4 normal : TEXCOORD3;
 };
 
 //───────────────────────────────────────
@@ -39,9 +43,6 @@ VS_OUT VS(float4 pos : POSITION, float4 uv : TEXCOORD, float4 normal : NORMAL)
 	//ピクセルシェーダーに渡す構造体データ
 	VS_OUT outData;
 
-	//スクリーン座標ではない実際の位置を補完する
-	outData.tmpPos = pos;
-
 	//ローカル座標に、ワールド・ビュー・プロジェクション行列をかけて
 	//スクリーン座標に変換し、ピクセルシェーダーへ
 	outData.pos = mul(pos, matWVP);
@@ -49,11 +50,15 @@ VS_OUT VS(float4 pos : POSITION, float4 uv : TEXCOORD, float4 normal : NORMAL)
 	//テクスチャデータをピクセルシェーダーへ
 	outData.uv = uv;
 
-	//法線を回転
-	normal = mul(normal, matNormal);
+	//ライト
+	outData.lightDir = float4(lightPos.xyz, 1.0) - mul(pos.xyz, matNormal);
+	outData.lightLen = length(outData.lightDir);
+
+	//法線
+	outData.normal = mul(normal, matNormal);
 
 	//輝度情報をピクセルシェーダ―へ
-	float4 light = matLightPos;
+	float4 light = lightPos;
 	light = normalize(light);
 	outData.color = clamp(dot(normal, light), 0, 1);
 
@@ -69,26 +74,20 @@ float4 PS(VS_OUT inData) : SV_Target
 	float4 diffuse;
 	float4 ambient;
 
-	//ライトと物体の距離を計算(ライトの位置ー物体の位置(頂点ごと))
-	float len = length(matLightPos.xyz - mul(inData.tmpPos.xyz, matNormal));
+	float4 scalar = dot(inData.lightDir.xyz, inData.normal.xyz) * inData.lightLen;
 
 	//テクスチャがあるとき
 	if (isTexture) {
-		diffuse = (matLight * g_texture.Sample(g_sampler, inData.uv) * inData.color) / len;
-		ambient = matLight * g_texture.Sample(g_sampler, inData.uv) * ambientSource;
+		diffuse = (wLight * g_texture.Sample(g_sampler, inData.uv) * inData.color) / inData.lightLen;
+		ambient = wLight * g_texture.Sample(g_sampler, inData.uv) * ambientSource;
 	}
 	//テクスチャがないとき
 	else {
-		diffuse = ((matLight * diffuseColor * inData.color)*2) / len;
-		ambient = matLight * diffuseColor * ambientSource;
-
-		/*if (inData.pos.x < 200) {
-			return float4(0, 1, 0, 1);
-		}*/
-
+		diffuse = ((wLight * diffuseColor * inData.color) * 2) / inData.lightLen;
+		ambient = wLight * diffuseColor * ambientSource;
 	}
 
-	return diffuse + ambient;
+	return diffuse + ambient + scalar;
 }
 
 

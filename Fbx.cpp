@@ -75,19 +75,17 @@ void Fbx::Draw(Transform& _transform)
 	{
 		//コンスタントバッファをセット
 		CONSTANT_BUFFER cb;
+
 		cb.matWVP = XMMatrixTranspose(_transform.GetWorldMatrix() * Camera::GetViewMatrix() * Camera::GetProjectionMatrix());
 		cb.matNormal = XMMatrixTranspose(_transform.GetNormalMatrix());
+		cb.LightPos = Light::GetPosition();
+		cb.Light = Light::GetworldLight();
 
 		//マテリアルカラー
 		cb.diffuseColor = pMaterialList_[i].diffuse_;
 
 		//テクスチャの有無
 		cb.isTexture = pMaterialList_[i].pTexture_ != nullptr;
-
-		//ライトの位置・強度
-		cb.matLightPos = Light::GetPosition();
-		cb.matLight = Light::GetworldLight();
-
 
 		D3D11_MAPPED_SUBRESOURCE pdata;
 		Direct3D::pContext_->Map(pConstantBuffer_, 0, D3D11_MAP_WRITE_DISCARD, 0, &pdata);	// GPUからのデータアクセスを止める
