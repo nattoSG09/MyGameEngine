@@ -4,7 +4,7 @@
 #include "Engine/RootJob.h"
 
 #include "Engine/Camera.h"
-#include "Engine/Light.h"
+//#include "Engine/Light.h"
 #include "Engine/Input.h"
 
 
@@ -63,7 +63,6 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 		NULL                 //パラメータ（なし）
 	);
 
-	//っふぁふぁｆ
 	//ウィンドウを表示
 	ShowWindow(hWnd, nCmdShow);
 
@@ -75,9 +74,6 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 		PostQuitMessage(0);
 	}
 
-	//RootJobの初期化
-	pRootJob = new RootJob;
-	pRootJob->Initialize();
 
 	//カメラを初期化
 	Camera::Initialize(winW,winH);
@@ -86,7 +82,11 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 	Input::Initialize(hWnd);
 
 	//ライトの初期化
-	Light::Initialize();
+	//Light::Initialize();
+
+	//RootJobの初期化
+	pRootJob = new RootJob;
+	pRootJob->Initialize();
 
 	//メッセージループ（何か起きるのを待つ）
 	MSG msg;
@@ -107,7 +107,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 			{
 				//表示
 				Camera::Update();
-				Light::Update();
+				//Light::Update();
 				
 				//入力
 				Input::Update();
@@ -116,14 +116,19 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 
 			//描画処理
 			Direct3D::BeginDraw();
+
+			
+			pRootJob->DrawSub();
+			
+
 			Direct3D::EndDraw();
 		}
 	}
 
 	//解放処理
+	SAFE_RELEASE(pRootJob);
 	Direct3D::Release();
 	Input::Release();
-	SAFE_RELEASE(pRootJob);
 
 	return 0;
 }
