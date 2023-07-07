@@ -278,7 +278,7 @@ HRESULT Direct3D::InitShaderPL3D()
 	D3DCompileFromFile(wtext, nullptr, nullptr, "VS", "vs_5_0", NULL, 0, &pCompileVS, NULL);
 	assert(pCompileVS != nullptr);
 
-	hr = pDevice_->CreateVertexShader(pCompileVS->GetBufferPointer(), pCompileVS->GetBufferSize(), NULL, &(shaderBundle[SHADER_3D].pVertexShader_));
+	hr = pDevice_->CreateVertexShader(pCompileVS->GetBufferPointer(), pCompileVS->GetBufferSize(), NULL, &(shaderBundle[SHADER_PL3D].pVertexShader_));
 	if (FAILED(hr)) {
 		MessageBox(nullptr, "頂点シェーダの作成に失敗しました", "エラー", MB_OK);
 		return hr;
@@ -290,7 +290,7 @@ HRESULT Direct3D::InitShaderPL3D()
 		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, sizeof(XMVECTOR) , D3D11_INPUT_PER_VERTEX_DATA, 0 },//UV座標
 		{ "NORMAL",	0, DXGI_FORMAT_R32G32B32_FLOAT, 0, sizeof(XMVECTOR) * 2 ,	D3D11_INPUT_PER_VERTEX_DATA, 0 },//法線
 	};
-	hr = pDevice_->CreateInputLayout(layout.data(), layout.size(), pCompileVS->GetBufferPointer(), pCompileVS->GetBufferSize(), &(shaderBundle[SHADER_3D].pVertexLayout_));
+	hr = pDevice_->CreateInputLayout(layout.data(), layout.size(), pCompileVS->GetBufferPointer(), pCompileVS->GetBufferSize(), &(shaderBundle[SHADER_PL3D].pVertexLayout_));
 	if (FAILED(hr)) {
 		MessageBox(nullptr, "頂点インプットレイアウトに失敗しました", "エラー", MB_OK);
 		return hr;
@@ -301,7 +301,7 @@ HRESULT Direct3D::InitShaderPL3D()
 	ID3DBlob* pCompilePS = nullptr;
 	D3DCompileFromFile(wtext, nullptr, nullptr, "PS", "ps_5_0", NULL, 0, &pCompilePS, NULL);
 	assert(pCompilePS != nullptr);
-	hr = pDevice_->CreatePixelShader(pCompilePS->GetBufferPointer(), pCompilePS->GetBufferSize(), NULL, &(shaderBundle[SHADER_3D].pPixelShader_));
+	hr = pDevice_->CreatePixelShader(pCompilePS->GetBufferPointer(), pCompilePS->GetBufferSize(), NULL, &(shaderBundle[SHADER_PL3D].pPixelShader_));
 	if (FAILED(hr)) {
 		MessageBox(nullptr, "ピクセルシェーダの作成に失敗しました", "エラー", MB_OK);
 		return hr;
@@ -313,7 +313,7 @@ HRESULT Direct3D::InitShaderPL3D()
 	rdc.CullMode = D3D11_CULL_BACK;
 	rdc.FillMode = D3D11_FILL_SOLID;
 	rdc.FrontCounterClockwise = FALSE;
-	hr = pDevice_->CreateRasterizerState(&rdc, &(shaderBundle[SHADER_3D].pRasterizerState_));
+	hr = pDevice_->CreateRasterizerState(&rdc, &(shaderBundle[SHADER_PL3D].pRasterizerState_));
 	if (FAILED(hr)) {
 		MessageBox(nullptr, "ラスタライザの作成に失敗しました", "エラー", MB_OK);
 		return hr;

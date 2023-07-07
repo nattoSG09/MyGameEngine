@@ -36,8 +36,8 @@ private:
 	{
 		XMMATRIX	matWVP;
 		XMMATRIX	matNormal;
-		XMFLOAT4	matLightPos;
-		XMFLOAT4	matLight;
+		XMFLOAT4	LightPos;
+		XMFLOAT4	Light;
 
 		XMFLOAT4	diffuseColor;
 		int			isTexture;

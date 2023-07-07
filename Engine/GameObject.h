@@ -31,7 +31,7 @@ public:
 		T* p;
 		p = new T(parent);
 		p->Initialize();
-		childList_.push_back(p);
+		parent->childList_.push_back(p);
 	}
 
 };
