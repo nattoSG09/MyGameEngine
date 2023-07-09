@@ -51,9 +51,11 @@ VS_OUT VS(float4 pos : POSITION, float4 uv : TEXCOORD, float4 normal : NORMAL)
 	//テクスチャデータをピクセルシェーダーへ
 	outData.uv = uv;
 
+	// ワールド座標系での光源の位置を計算
+	float4 worldLightPos = mul(lightPos, matW);
+
 	//ライト
-	outData.lightDir = float4(lightPos.xyz, 1.0) - mul(pos.xyzw, matW);
-	outData.lightDir = float4(outData.lightDir.xyz, 0);
+	outData.lightDir = float4(worldLightPos.xyz, 1.0) - mul(pos.xyzw, matW);
 
 	outData.lightLen = length(outData.lightDir);
 	outData.lightDir = normalize(outData.lightDir);
@@ -88,7 +90,7 @@ float4 PS(VS_OUT inData) : SV_Target
 	}
 	//テクスチャがないとき
 	else {
-		diffuse = ((wLight * diffuseColor * inData.color) * 2) / inData.lightLen;
+		diffuse = (wLight * diffuseColor * inData.color) / inData.lightLen;
 		ambient = wLight * diffuseColor * ambientSource;
 	}
 
