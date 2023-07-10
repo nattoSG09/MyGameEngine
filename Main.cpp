@@ -178,7 +178,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 					if (Input::IsKey(DIK_E))z -= 0.001f;
 					Light::SetPosition(XMFLOAT4(x, y, z, 0));
 					//Light::SetPosition(XMFLOAT4(-0.3f, 0.6f, -0.6f, 0));
-					Light::SetIntensity(1.0f);
+					Light::SetIntensity(5.0f);
 				}
 
 				//•`‰æ

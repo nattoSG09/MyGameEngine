@@ -81,7 +81,7 @@ float4 PS(VS_OUT inData) : SV_Target
 	float4 diffuse;
 	float4 ambient;
 
-	float4 scalar = dot(inData.lightDir.xyz, inData.normal.xyz) * inData.lightLen;
+	float4 scalar = dot(inData.lightDir.xyz, inData.normal.xyz) / inData.lightLen;
 
 	//テクスチャがあるとき
 	if (isTexture) {
