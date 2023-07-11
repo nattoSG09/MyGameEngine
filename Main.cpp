@@ -183,11 +183,11 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 
 				//•`‰æ
 				Transform t;
-				t.position_.x = 3.0f;
+				t.position_.x = 1.5f;
 				pFbx->Draw(t);
 
 				Transform t2;
-				t2.position_.x = -3.0f;
+				t2.position_.x = -1.5f;
 				pFbx2->Draw(t2);
 			}
 			#endif

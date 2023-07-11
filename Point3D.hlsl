@@ -68,7 +68,7 @@ VS_OUT VS(float4 pos : POSITION, float4 uv : TEXCOORD, float4 normal : NORMAL)
 	float4 light = mul(lightPos,matW);
 	light = normalize(light);
 	outData.normal = mul(normal, matW);
-	outData.color = clamp(dot(mul(normal, matW), light), 0, 1);
+	outData.color = clamp(dot(mul(normal, matW), outData.lightDir), 0, 1);;
 	
 	return outData;
 }
@@ -78,7 +78,7 @@ VS_OUT VS(float4 pos : POSITION, float4 uv : TEXCOORD, float4 normal : NORMAL)
 //„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ
 float4 PS(VS_OUT inData) : SV_Target
 {
-	float4 ambientSource = float4(0.2, 0.2, 0.2, 1.0);
+	float4 ambientSource = float4(0.3, 0.3, 0.3, 1.0);
 	float4 diffuse;
 	float4 ambient;
 
