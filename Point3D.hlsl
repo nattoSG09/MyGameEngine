@@ -68,6 +68,7 @@ VS_OUT VS(float4 pos : POSITION, float4 uv : TEXCOORD, float4 normal : NORMAL)
 	float4 light = lightPos;
 	light = normalize(light);
 	outData.color = clamp(dot(normal, light), 0, 1);
+	outData.normal = mul(normal, matW);
 
 	return outData;
 }
